@@ -1,0 +1,75 @@
+{% extends 'dashboard.html' %} {% block title %}Report{% endblock %} {% block
+content %}
+<style>
+  .reportCard {
+    overflow: hidden;
+  }
+
+  .reportCard img {
+    transition: transform 0.5s ease;
+  }
+  .reportCard:hover img {
+    transform: scale(1.2);
+  }
+</style>
+<div class="container">
+  <br />
+  <div class="row">
+    <h1 style="color: #fff">Analysis Report</h1>
+  </div>
+  <br />
+  <div class="row">
+    <div class="col-4">
+      <a
+        href="{{ url_for('admin.sixmrCompletion') }}"
+        style="text-decoration: none"
+      >
+        <div class="card reportCard">
+          <img
+            src="/static/img/6mrCompletion.png"
+            class="card-img-top"
+            alt="6mr completion"
+          />
+          <div class="card-body">
+            <p class="card-text">6MR Completion</p>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="col-4">
+      <a
+        href="{{ url_for('admin.studentPerformance') }}"
+        style="text-decoration: none"
+      >
+        <div class="card reportCard">
+          <img
+            src="/static/img/studentPerformance.png"
+            class="card-img-top"
+            alt="6mr completion"
+          />
+          <div class="card-body">
+            <p class="card-text">Student Performance</p>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="col-4">
+      <a
+        href="{{ url_for('admin.facultyPerformance') }}"
+        style="text-decoration: none"
+      >
+        <div class="card reportCard">
+          <img
+            src="/static/img/facultyPerformance.png"
+            class="card-img-top"
+            alt="6mr completion"
+          />
+          <div class="card-body">
+            <p class="card-text">Faculty Performance</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

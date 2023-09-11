@@ -1,0 +1,123 @@
+<!--Reset password Modal -->
+<!--included by base.html -->
+<div
+  class="modal fade"
+  id="resetPasswordModal"
+  tabindex="-1"
+  aria-labelledby="resetPasswordLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="loginModalLabel">
+          Reset Your Password
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <!-- flash message for reset psw-->
+      <div class="modal-body">
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %} {% for category, message in messages %} {% if category
+        =="error" %}
+        <div
+          class="alert alert-danger alert-dismissible fade show"
+          role="alert"
+        >
+          {{ message }}
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+          ></button>
+        </div>
+
+        {% elif category == "success" %}
+        <div
+          class="alert alert-success alert-dismissible fade show"
+          role="alert"
+        >
+          {{ message }}
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+          ></button>
+        </div>
+        {% elif category == "warning" %}
+        <div
+          class="alert alert-warning alert-dismissible fade show"
+          role="alert"
+        >
+          {{ message }}
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+          ></button>
+        </div>
+        {% endif %} {% endfor %} {% endif %} {% endwith %}
+      </div>
+      <!-- end flash message-->
+      <div class="modal-body">
+        <form
+          action="/reset_password"
+          class="needs-validation"
+          method="post"
+          novalidate
+        >
+          <div class="mb-3">
+            <label for="new_password" class="col-form-label"
+              >New Password:</label
+            >
+            <input
+              type="password"
+              class="form-control"
+              name="new_password"
+              id="newPassword"
+              minlength="8"
+              value=""
+              required
+            />
+
+            <div class="invalid-feedback">
+              password must by at least 8 characters
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="new_confirmPassword" class="col-form-label"
+              >Confirm Password:</label
+            >
+            <input
+              type="password"
+              class="form-control"
+              name="new_confirmPassword"
+              id="confirmPassword"
+              minlength="8"
+              required
+            />
+            <small style="color: red" id="passwordNotMatch"></small>
+          </div>
+          <div class="mb-3">
+            <button
+              type="submit"
+              class="btn btn-primary mb-3"
+              style="margin-left: 40%"
+            >
+              Reset
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Reset password modal -->

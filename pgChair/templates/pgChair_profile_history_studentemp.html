@@ -1,0 +1,133 @@
+{% extends 'user_base.html' %} {% block title %}Profile{% endblock %} {% block
+content %}
+<div>
+  {% with messages = get_flashed_messages() %} {% if messages %}
+  <ul class="flashes">
+    {% for message in messages %}
+    <div
+      class="alert alert-success alert-dismissible fade show"
+      role="alert"
+    >
+    {{ message }}
+    {% endfor %}
+  </ul>
+  {% endif %} {% endwith %}
+  <h1>My Profile</h1>
+  <hr />
+</div>
+<div>
+  <h3>Employment History Information:</h3>
+  <br />
+  {% for emp in student_emp_history %}
+  <hr>
+  <form>
+    <div class="form-group row">
+      <label for="employmentid" class="col-sm-3 col-form-label"
+        ><strong>Employment ID:</strong></label
+      >
+      <div class="col-sm-9">
+        <input
+          type="number"
+          id="employmentid"
+          name="employmentid"
+          class="form-control"
+          readonly
+          value="{{ emp['EmploymentID'] }}"
+        />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="supervisorname" class="col-sm-3 col-form-label"
+        ><strong>Supervisor Name:</strong></label
+    >
+    <div class="col-sm-9">
+      <input
+        type="text"
+        id="supervisorname"
+        name="supervisorname"
+        class="form-control"
+        readonly
+        value="{{ emp['Supervisor Name'] }}"
+      />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="employmenttype" class="col-sm-3 col-form-label"
+        ><strong>Employment Type:</strong></label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          id="employmenttype"
+          name="employmenttype"
+          class="form-control"
+          readonly
+          value="{{ emp['EmploymentType'] }}"
+        /> 
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="weeklyhours" class="col-sm-3 col-form-label"
+        ><strong>Weekly Hours:</strong></label
+      >
+      <div class="col-sm-9">
+        <input
+          type="number"
+          id="weeklyhours"
+          name="weeklyhours"
+          class="form-control"
+          readonly
+          value="{{ emp['WeeklyHours'] }}"
+        />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="startdate" class="col-sm-3 col-form-label"
+        ><strong>Start Date:</strong></label
+      >
+      <div class="col-sm-9">
+        <input
+          type="date"
+          id="startdate"
+          name="startdate"
+          class="form-control"
+          readonly
+          value="{{ emp['StartDate'] }}"
+        />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="enddate" class="col-sm-3 col-form-label"
+        ><strong>End Date:</strong></label
+      >
+      <div class="col-sm-9">
+        <input
+          type="date"
+          id="enddate"
+          name="enddate"
+          class="form-control"
+          readonly
+          value="{{ emp['EndDate'] }}"
+        />
+      </div>
+    </div>
+  </br>
+  </br>
+
+    {% endfor %}
+    <div class="form-group row">
+      <div class="col-sm-3"></div>
+      <div class="col-sm-9 d-flex align-items-center">
+        <a type="button" class="btn btn-primary mb-3 mr-2" style="width: 20%; display: none;" href="/student/profile/edit/history/studentemp">Edit</a>
+        <a type="button" class="btn btn-primary mb-3" style="width: 20%; display: none;" href="/student/profile">Cancel</a>
+      </div>
+      </div>
+    </div>
+</form>
+
+{% endblock %}

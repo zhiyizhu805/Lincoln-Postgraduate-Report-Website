@@ -1,0 +1,1457 @@
+{% extends 'dashboard.html' %} {% block title %}Profile{% endblock %} {% block
+content %}
+<div class="container">
+  <br />
+  <div class="row"><div class="col-8">
+      <h1 style="color: #fff">View Report {{reportId}}</h1>
+    </div>
+    <div class="col-4" style="text-align: right">
+      <a
+        class="btn btn-primary"
+        href="{{ url_for('admin.reportList') }}"
+        role="button"
+        >Back To List</a
+      >
+    </div></div>
+  <br />
+  <div
+    style="background-color: #fff; color: rgb(41, 40, 40); padding-bottom: 10%"
+  >
+    <!-- Section A -->
+    <div class="w3-container" id="A">
+      <h2 class="w3-Xlarge text-dark pt-5">Section A - Student Record</h2>
+      <hr style="width: 50px; border: 5px solid" class="w3-round" />
+      <!-- Student Record Content -->
+      <div>
+        <p class="h5">Profile</p>
+        <hr />
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="studentname" class="form-label">Name</label>
+
+            <input
+              type="text"
+              id="studentname"
+              name="studentname"
+              class="form-control"
+              disabled
+              value="{{student_profile['FirstName']}}&nbsp;{{student_profile['LastName']}}"
+            />
+          </div>
+
+          <div class="col-md-6">
+            <label for="studentid" class="form-label">Student ID</label>
+
+            <input
+              type="number"
+              id="studentid"
+              name="studentid"
+              class="form-control"
+              disabled
+              value="{{student_profile['StudentID']}}"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="enrolmentdate" class="form-label">Enrolment Date</label>
+
+            <input
+              type="date"
+              id="enrolmentdate"
+              name="enrolmentdate"
+              class="form-control"
+              disabled
+              value="{{student_profile['EnrolmentDate']}}"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="modeofstudy" class="form-label">Mode Of Study</label>
+
+            <select
+              type="text"
+              id="modeofstudy"
+              name="modeofstudy"
+              class="form-control"
+              disabled
+            >
+              {% for mode in ['Full-time','Part-time']%} {% if mode ==
+              student_profile['ModeOfStudy'] %}
+              <option value="{{mode}}" selected>{{mode}}</option>
+              {% else %}
+              <option value="{{mode}}">{{mode}}</option>
+              {% endif %} {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="phone" class="form-label">Phone</label>
+
+            <input
+              type="text"
+              id="phone"
+              name="phone"
+              class="form-control"
+              value="{{student_profile['Phone']}}"
+              disabled
+            />
+            <div class="invalid-feedback">Please enter a name.</div>
+          </div>
+          <div class="col-md-6">
+            <label for="email" class="form-label">Email</label>
+
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-control"
+              disabled
+              value="{{student_profile['Email']}}"
+            />
+          </div>
+
+          <div class="col-12">
+            <label for="address" class="form-label">Current Address</label>
+
+            <input
+              type="text"
+              id="address"
+              name="address"
+              class="form-control"
+              value="{{student_profile['Address']}}"
+              disabled
+            />
+          </div>
+          <div class="col-12">
+            <label for="thesistitle" class="form-label">Thesis Title</label>
+            <textarea
+              type="text"
+              id="thesistitle"
+              name="thesistitle"
+              class="form-control"
+              disabled
+            >
+{{student_profile['ThesisTitle']}}
+            </textarea>
+          </div>
+        </div>
+      </div>
+      <br />
+      <p class="h5">Supervision Team</p>
+      <hr />
+      <div class="row g-3">
+        {% for sup in supervisors %}
+        <div class="col-md-4">
+          <label for="supervisortype" class="form-label"
+            >{{ sup['SupervisorType'] }}</label
+          >
+          <input
+            type="text"
+            id="supervisortype"
+            name="supervisortype"
+            class="form-control"
+            disabled
+            value="{{ sup['SupervisorName']}}"
+          />
+        </div>
+        {% endfor %}
+      </div>
+      <div>
+        {% if scholarships %} {% for sch in scholarships %}
+        <br />
+        <p class="h5">Scholarship</p>
+        <hr />
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="scholarship_name" class="form-label">Name</label>
+            <input
+              type="text"
+              id="scholarship_name"
+              name="scholarship_name"
+              class="form-control"
+              disabled
+              value="{{sch['Name']}}"
+            />
+          </div>
+
+          <div class="col-md-6">
+            <label for="value" class="form-label">Value</label>
+            <input
+              type="number"
+              id="value"
+              name="value"
+              class="form-control"
+              disabled
+              value="{{sch['Value']}}"
+            />
+          </div>
+
+          <div class="col-md-6">
+            <label for="start_date" class="form-label">Start Date</label>
+            <input
+              type="date"
+              id="start_date"
+              name="start_date"
+              class="form-control"
+              disabled
+              value="{{sch['StartDate']}}"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="end_date" class="form-label">End Date</label>
+            <input
+              type="date"
+              id="end_date"
+              name="end_date"
+              class="form-control"
+              disabled
+              value="{{ sch['EndDate'] }}"
+            />
+          </div>
+        </div>
+        {% endfor %} {% endif %}
+        <br />
+        {% if employment %} {% for em in employment %}
+        <p class="h5">Current Employment</p>
+        <hr />
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="employmenttype" class="form-label"
+              >Employment Type</label
+            >
+
+            <input
+              type="text"
+              id="employmenttype"
+              name="employmenttype"
+              class="form-control"
+              disabled
+              value="{{ em['EmploymentType'] }}"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="supervisorname" class="form-label"
+              >Supervisor Name</label
+            >
+
+            <input
+              type="text"
+              id="supervisorname"
+              name="supervisorname"
+              class="form-control"
+              disabled
+              value="{{ em['Name'] }}"
+            />
+          </div>
+
+          <div class="col-md-6">
+            <label for="weeklyhours" class="form-label">Weekly Hours</label>
+
+            <input
+              type="number"
+              id="weeklyhours"
+              name="weeklyhours"
+              class="form-control"
+              disabled
+              value="{{ em['WeeklyHours'] }}"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="em_start_date" class="form-label">Start Date</label>
+
+            <input
+              type="date"
+              id="em_start_date"
+              name="em_start_date"
+              class="form-control"
+              disabled
+              value="{{ em['StartDate'] }}"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="em_end_date" class="form-label" style="display: none"
+              >End Date</label
+            >
+
+            <input
+              type="date"
+              id="em_start_date"
+              name="em_start_date"
+              class="form-control"
+              disabled
+              style="display: none"
+              value="{{ em['EndDate'] }}"
+            />
+          </div>
+          <hr />
+          {% endfor %} {% endif %}
+        </div>
+      </div>
+      <!-- End of Student Record Content -->
+    </div>
+
+    <!--  Section B -->
+    <div class="w3-container" id="B">
+      <h2 class="w3-Xlarge text-dark pt-5 mt-5">Section B - Milestones</h2>
+      <hr style="width: 50px; border: 5px solid" class="w3-round" />
+      <!-- Section B Table Content -->
+      <p class="h5">
+        Please answer if the following milestones are completed and give a date
+        of completion where appropriate.
+      </p>
+      <br />
+      <!--  -->
+      {% for b in b_table %}
+      <p>{{ b['MilestoneID'] }}&period;&nbsp;{{ b['MilestoneName'] }}</p>
+      <div class="form-check form-check-inline">
+        {% for option in b_options %} {% if option == b['IsCompleted'] %}
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            id="{{ radio_id }}"
+            name="milestone{{ b['MilestoneID'] }}"
+            value="{{ option }}"
+            checked
+            disabled
+          />
+          <label for="{{ radio_id }}" class="form-check-label"
+            >{{ option }}</label
+          >
+        </div>
+        {% else %}
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            id="{{ radio_id }}"
+            name="milestone{{ b['MilestoneID'] }}"
+            value="{{ option }}"
+            disabled
+          />
+          <label for="{{ radio_id }}" class="form-check-label"
+            >{{ option }}</label
+          >
+        </div>
+
+        {% endif %} {% endfor %}
+        <!-- Completion Date -->
+        <div class="form-check form-check-inline">
+          <input class="form-control" type="date" id="{{ completion_id }}"
+          name="completion_date{{ b['MilestoneID'] }}" value="{{
+          b['CompletionDate'] }}" {% if b['IsCompleted'] != 'Yes' %}
+          style="display: none;"{%endif%}disabled/>
+        </div>
+      </div>
+      <br /><br />
+      {% endfor %}
+      <!-- End of Section B Table Content -->
+      <!--  -->
+      <p class="h5">
+        Discuss with your supervisor(s) whether or not your research has been or
+        will need to be approved by any of the Lincoln University Committees
+        listed below and select the appropriate options.
+      </p>
+      <br />
+      <!-- section B Approval section -->
+      {% for b in b_approval %}
+      <p>{{b['ApproverID']}}&period;&nbsp;{{b['ApproverName']}}</p>
+      {% for option in approval_options %} {% if option == b['ApprovalStatus']
+      %}
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          id=""
+          name="approver{{b['ApproverID']}}"
+          value="{{option}}"
+          checked
+          disabled
+        />
+        <label class="form-check-label" for="">{{option}}</label>
+      </div>
+      {% else %}
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          id=""
+          name="approver{{b['ApproverID']}}"
+          value="{{option}}"
+          disabled
+        />
+        <label class="form-check-label" for="">{{option}}</label>
+      </div>
+      {% endif %}{% endfor %} <br /><br />{% endfor %}
+      <!-- section B Report Order section -->
+      <p class="h5">
+        Given that you are being managed to submit your PhD within 3 years of
+        registering then please tick the appropriate reporting option below.
+      </p>
+      <br />
+      {% for r in report_order_table %} {% if r['B_ReportOrder'] == report_order
+      %}
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="{{ r['B_ReportOrder'] }}"
+          name="report_order"
+          value="{{ r['B_ReportOrder'] }}"
+          checked
+          disabled
+        />
+        <label class="form-check-label" for="{{ r['B_ReportOrder'] }}"
+          >{{r['Description']}}</label
+        >
+      </div>
+
+      {% else %}
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="{{ r['B_ReportOrder'] }}"
+          name="report_order"
+          value="{{ r['B_ReportOrder'] }}"
+          disabled
+        />
+        <label class="form-check-label" for="{{ r['B_ReportOrder'] }}"
+          >{{r['Description']}}</label
+        >
+      </div>
+
+      {% endif %} {% endfor %}
+    </div>
+    <!-- end -->
+    <!--  Section C -->
+    <div class="w3-container" id="C">
+      <h2 class="w3-Xlarge text-dark pt-5 mt-5">
+        Section C - Evaluation of Faculty(or Centre) Performance
+      </h2>
+      <hr style="width: 50px; border: 5px solid" class="w3-round" />
+      <p class="h5">
+        Rate each of the following as they affect your study within the
+        Faculty(or Centre). If you have any converns about undertaking this
+        evaluation then please go directly to section D and then complete
+        section F.
+      </p>
+      <br />
+      <!-- Display C_Table Content -->
+      {% for c in c_table %}
+      <p>{{c['CriterionID']}}&period;&nbsp;{{c['Criterion']}}</p>
+      {% for option in rating_options %} {% if option == c['Result'] %}
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          id=""
+          name="evaluation_criterion{{c['CriterionID']}}"
+          value="{{option}}"
+          checked
+          disabled
+        />
+        <label class="form-check-label" for="">{{option}}</label>
+      </div>
+      {% else %}
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          id=""
+          name="evaluation_criterion{{c['CriterionID']}}"
+          value="{{option}}"
+          disabled
+        />
+        <label class="form-check-label" for="">{{option}}</label>
+      </div>
+      {% endif %} {% endfor %}
+      <!-- C_table Comments -->
+      <br /><br />
+      <div class="form-group">
+        <label for="{{c['CriterionID']}}">Comments</label>
+        {% if c['Comments'] == None %}
+        <textarea
+          class="form-control"
+          id=""
+          name="ec_comment{{c['CriterionID']}}"
+          rows="3"
+          disabled
+        ></textarea>
+        {% else %}
+        <textarea
+          class="form-control"
+          id=""
+          name="ec_comment{{c['CriterionID']}}"
+          rows="3"
+          disabled
+        >
+{{c['Comments']}}</textarea
+        >
+      </div>
+      {% endif %}<br />{% endfor %}
+      <div>
+        <div>
+          <!-- C meeting frequency-->
+          <p>21. How frequently do you have a meeting with your supervisor?</p>
+          {% for option in fqc_options %} {% if option == frequency %}
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              id="{{option}}"
+              name="meeting_frequency"
+              value="{{option}}"
+              checked
+              disabled
+            />
+            <label class="form-check-label" for="{{option}}">{{option}}</label>
+          </div>
+
+          {% else %}
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              id="{{option}}"
+              name="meeting_frequency"
+              value="{{option}}"
+              disabled
+            />
+            <label class="form-check-label" for="{{option}}">{{option}}</label>
+          </div>
+
+          {% endif %} {% endfor %}
+
+          <br /><br />
+          <!-- Feedback period -->
+          <p>
+            22. What is the usual period for receiving feedback from your
+            supervisor on submitted materials?
+          </p>
+          {% for option in fb_options %} {% if option == feedback_period %}
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              id="{{option}}"
+              name="feedback_period"
+              value="{{option}}"
+              checked
+              disabled
+            />
+            <label for="{{option}}" class="form-check-label">{{option}}</label>
+          </div>
+          {% else %}
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              id="{{option}}"
+              name="feedback_period"
+              value="{{option}}"
+              disabled
+            />
+            <label for="{{option}}" class="form-check-label">{{option}}</label>
+          </div>
+          {% endif %} {% endfor %}
+          <!-- Feedback channel -->
+          <br /><br />
+          <p>
+            23. How do you receive your feedback from your supervisor? (Tick
+            more than one box if appropriate)
+          </p>
+          {% for c in c_feedback_channel_data %} {% if c['IsSelected'] == 'Yes'
+          %}
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="{{ c['FeedbackChannelID'] }}"
+              name="feedback_channel{{ c['FeedbackChannelID'] }}"
+              value="Yes"
+              checked
+              disabled
+            />
+            <label for="{{ c['FeedbackChannelID'] }}" class="form-check-label"
+              >{{c['FeedbackChannel']}}</label
+            >
+          </div>
+
+          {% else %}
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="{{ c['FeedbackChannelID'] }}"
+              name="feedback_channel{{ c['FeedbackChannelID'] }}"
+              value="Yes"
+              disabled
+            />
+            <label for="{{ c['FeedbackChannelID'] }}" class="form-check-label"
+              >{{c['FeedbackChannel']}}</label
+            >
+          </div>
+          {% endif %} {% endfor %} <br /><br />
+          <p>
+            <em
+              >&ast;Please make sure all questions in Section A, B and C are
+              completed before you meet your supervisor and Associate Supervisor
+              to complete Section D.</em
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- end -->
+    <!--  Section D -->
+    <div class="w3-container" id="D">
+      <h2 class="w3-Xlarge text-dark pt-5 mt-5">
+        Section D - Progress and Achievements
+      </h2>
+      <hr style="width: 50px; border: 5px solid" class="w3-round" />
+      <p>
+        <em>&ast;Assessment by student and supervisors</em><br />This is an
+        assessment of your progress and will be included in your postgraduate
+        record. It is intended primarily to assist you to plan and carry out
+        your study. The assessment is a documented record of your study and will
+        illustrate your ability to define and achieve objectives.<br />
+        Complete this after discussing it with your supervisor.
+      </p>
+      <p class="h6">
+        Ensure you note and address any deviations from the standard 3-year PhD
+        timeline. Add additional rows to these tables as necessary.
+      </p>
+      <br />
+      <p class="h5">
+        1. Report on your Research Objectives for the last Six Months
+      </p>
+      <br />
+      <!-- D1 auto incremental row -->
+      <table id="d1Table" class="table">
+        <thead class="table table-secondary table-hover table-striped">
+          <tr>
+            <th>
+              Research Objectives<br /><small
+                >(copy this from your last report form)</small
+              >
+            </th>
+            <th>Status<br /><small>complete or incomplete</small></th>
+            <th>
+              Comments<br /><small
+                >Explain, where relevant, why particular activities are not
+                completed</small
+              >
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for d in d1_data %}
+          <tr>
+            <td>
+              <input
+                type="text"
+                class="form-control"
+                value="{{d['ResearchObjective']}}"
+                name="d1_research_objectives[]"
+                disabled
+              />
+            </td>
+            <td>
+              <select name="d1_status[]" id="" class="form-control" disabled>
+                {% for option in status_options %} {% if option == d['Status']
+                %}
+                <option value="{{option}}" name="d1_status[]" selected>
+                  {{option}}
+                </option>
+                {% else %}
+                <option value="{{option}}" name="d1_status[]">
+                  {{option}}
+                </option>
+                {% endif %} {% endfor %}
+              </select>
+            </td>
+            <td>
+              <input
+                type="text"
+                class="form-control"
+                name="d1_comments[]"
+                value="{{d['Comments']}}"
+                disabled
+              />
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td>
+              <input
+                type="text"
+                class="form-control"
+                value=""
+                name="d1_research_objectives[]"
+                disabled
+              />
+            </td>
+            <td>
+              <select name="d1_status[]" id="" class="form-control" disabled>
+                {% for option in status_options %} {% if option == 'Select One'
+                %}
+                <option value="{{option}}" selected name="d1_status[]">
+                  {{option}}
+                </option>
+                {% else %}
+                <option value="{{option}}" name="d1_status[]">
+                  {{option}}
+                </option>
+                {% endif %} {% endfor %}
+              </select>
+            </td>
+            <td>
+              <input
+                type="text"
+                class="form-control"
+                name="d1_comments[]"
+                value=""
+                disabled
+              />
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <br />
+      <!-- end of d1_table_part -->
+      <p>
+        Have any of these objectives changed or been modified since your
+        proposal? If so, how, and why?
+      </p>
+      {% if d1_objective_change %}
+      <textarea
+        name="d1_objective_change"
+        id=""
+        class="form-control"
+        rows="3"
+        disabled
+      >
+{{d1_objective_change}}</textarea
+      >
+      {% else %}
+      <textarea
+        name="d1_objective_change"
+        id=""
+        class="form-control"
+        rows="3"
+        disabled
+      ></textarea>
+      {% endif %}
+      <br />
+      <!-- D2 -->
+      <p class="h5">
+        2. Evaluation of effects of COVID-19 on research progress
+      </p>
+      <p>
+        Detail any effects on your research plan of impacts such as travel
+        restrictions, university closure including office or lab access,
+        participant survey opportunities, financial hardship and social,
+        emotional and mental well-being.
+      </p>
+      {% if d2_data %}
+      <textarea
+        name="d2_covid_effects"
+        id=""
+        class="form-control"
+        rows="3"
+        disabled
+      >
+{{d2_data}}</textarea
+      >
+      {% else %}
+      <textarea
+        name="d2_covid_effects"
+        id=""
+        class="form-control"
+        rows="3"
+        disabled
+      ></textarea>
+      {% endif %}
+      <br />
+      <!-- D3 -->
+      <p class="h5">
+        3. Other Significant Academic Achievements in the last Six Months
+      </p>
+      <p>
+        List other achievements including conference presentations,
+        publications, workshops, posters etc.
+      </p>
+      {% if d3_data %}
+      <textarea
+        name="d3_academic_achievements"
+        id=""
+        class="form-control"
+        rows="3"
+        disabled
+      >
+{{d3_data}}</textarea
+      >
+      {% else %}
+      <textarea
+        name="d3_academic_achievements"
+        id=""
+        class="form-control"
+        rows="3"
+        disabled
+      ></textarea>
+      {% endif %}
+      <br />
+      <!-- D4 -->
+      <p class="h5">4. Research Objectives for the next Six Months</p>
+      <br />
+      <!-- D4 auto incremental row -->
+      <table id="d4Table" class="table">
+        <thead class="table table-secondary table-hover table-striped">
+          <tr>
+            <th>
+              Research Objectives<br /><small
+                >(see your Research Proposal, which in most cases should have
+                been prepared by now)</small
+              >
+            </th>
+            <th>Target completion date</th>
+            <th>Anticipated problems in achieving objectives</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for d in d4_data %}
+          <tr>
+            <td>
+              <input
+                type="text"
+                class="form-control"
+                value="{{d['Objective']}}"
+                name="d4_objectives[]"
+                disabled
+              />
+            </td>
+            <td>
+              <input
+                type="date"
+                value="{{d['TargetCompletionDate']}}"
+                class="form-control"
+                name="d4_target_completion_date[]"
+                disabled
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                class="form-control"
+                value="{{d['AnticipatedProblems']}}"
+                name="d4_anticipated_problems[]"
+                disabled
+              />
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td>
+              <input
+                type="text"
+                class="form-control"
+                value=""
+                name="d4_objectives[]"
+                disabled
+              />
+            </td>
+            <td>
+              <input
+                type="date"
+                class="form-control"
+                value=""
+                name="d4_target_completion_date[]"
+                disabled
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                class="form-control"
+                value=""
+                name="d4_anticipated_problems[]"
+                disabled
+              />
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <br />
+      <!-- D5 -->
+      <p class="h5">5. Expected Research Expenditure for the next Six Months</p>
+      <br />
+      <!-- D5 -->
+      <table id="d5Table" class="table">
+        <thead class="table table-secondary table-hover table-striped">
+          <tr>
+            <th>Item</th>
+            <th>Amount</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for d in d5_data %}
+          <tr>
+            <td>
+              <input
+                type="text"
+                class="form-control"
+                value="{{d['Item']}}"
+                name="d5_items[]"
+                disabled
+              />
+            </td>
+            <td>
+              <input
+                type="number"
+                value="{{d['Amount']}}"
+                class="form-control amount-input"
+                name="d5_amount[]"
+                disabled
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                class="form-control"
+                value="{{d['Notes']}}"
+                name="d5_notes[]"
+                disabled
+              />
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td>
+              <input
+                type="text"
+                class="form-control"
+                value=""
+                name="d5_items[]"
+                disabled
+              />
+            </td>
+            <td>
+              <input
+                type="number"
+                class="form-control amount-input"
+                value=""
+                name="d5_amount[]"
+                disabled
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                class="form-control"
+                value=""
+                name="d5_notes[]"
+                disabled
+              />
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <br />
+      <div class="form-check-inline">
+        <label for="total_expenditure" class="form-label col-sm-6 h6"
+          >Total Expenditure</label
+        >
+        <input
+          id="total_expenditure"
+          name="total_expenditure"
+          type="text"
+          class="form-control"
+          value="{{d5_expenditure}}"
+          disabled
+        />
+      </div>
+
+      <br />
+      <!-- D5 comments -->
+      <br /><br />
+      <p>Comments:</p>
+      {% if d5_comments %}
+      <textarea name="d5_comments" id="" class="form-control" rows="3" disabled>
+{{d5_comments}}</textarea
+      >
+      {% else %}
+      <textarea
+        name="d5_comments"
+        id=""
+        class="form-control"
+        rows="3"
+        disabled
+      ></textarea>
+      {% endif %}
+      <br />
+    </div>
+    <!-- End of Section D -->
+    <!-- Section E -->
+    {% if session['role']=='Student' and is_finalised %} {% if
+    e_assessment_content %}
+    <div class="w3-container" id="E">
+      <h2 class="w3-Xlarge text-dark pt-5 mt-5">
+        Section E - Assessment of Student by Supervisor(s)
+      </h2>
+      <hr style="width: 50px; border: 5px solid" class="w3-round" />
+      <p>
+        This form will remain confidential to the Supervisor(s), Student,
+        Faculty Postgraduate Administrator/ Chairperson and Faculty Dean (or
+        nominee). Note that external supervisors/advisors/Tuakana are disabled
+        to complete this assessment form where the student is working primarily
+        offsite.<br /><br />Supervisors are disabled to use this form to comment
+        on students at six-monthly intervals, but this form may be used at any
+        time if problems arise. Students will subsequently receive a copy of
+        these forms with supervisors’ comments on them. If the student is
+        unhappy with these comments they can approach the Faculty Postgraduate
+        Chairperson (or the LU Postgraduate Director, see page 1) to discuss the
+        issue. If the student’s progress is unsatisfactory in a major way,
+        without prospects of resolution, further action may be taken (see the
+        PhD House Rules).
+      </p>
+      <br /><br /><br />
+
+      <!-- Section E Content section -->
+      {% for e in e_assessment_content %}
+      <div>
+        <p class="h4">
+          Supervisor Assessment&nbsp;{{e_assessment_content.index(e)+1}}
+        </p>
+        <p>
+          {{e['e_assessment_info']['CompletionDate']}}&nbsp;{{e['e_assessment_info']['CompletionTime']}}
+        </p>
+        <hr />
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="supervisor_name" class="form-label"
+              >Supervisor Name</label
+            >
+            <input
+              type="text"
+              id="supervisor_name"
+              name="supervisor_name"
+              class="form-control"
+              disabled
+              value="{{e['e_assessment_info']['SupervisorName']}}"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="supervisor_type" class="form-label"
+              >Supervisor Type</label
+            >
+
+            <input
+              type="text"
+              id="supervisor_type"
+              name="supervisor_type"
+              class="form-control"
+              disabled
+              value="{{e['e_assessment_info']['SupervisorType']}}"
+            />
+          </div>
+        </div>
+        <br /><br />
+        <p class="h5">
+          Please rate the student’s performance in the areas named below by
+          placing a tick in the appropriate boxes.
+        </p>
+        <br />
+        <!--  -->
+        <!-- Display E_Table Content -->
+        {% for et in e['e_table'] %}
+        <p>{{et['CriterionID']}}&period;&nbsp;{{et['Criterion']}}</p>
+        {% for option in e_rating_options %} {% if option == et['Result'] %}
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            id=""
+            name="{{e_assessment_content.index(e)+1}}{{et['CriterionID']}}"
+            value="{{option}}"
+            checked
+            disabled
+          />
+          <label class="form-check-label" for="">{{option}}</label>
+        </div>
+        {% else %}
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            id=""
+            name="assessment_criterion{{et['CriterionID']}}"
+            value="{{option}}"
+            disabled
+          />
+          <label class="form-check-label" for="">{{option}}</label>
+        </div>
+        {% endif %} {% endfor %}<br /><br />{% endfor %}
+        <!-- Extra Question -->
+        <p>
+          6&period;&nbsp;If a progress review meeting has taken place in the
+          period covered by this report, have any recommendations from that
+          meeting been carried out?
+        </p>
+        {% for option in e_irco_options %} {% if option ==
+        e['e_rest']['E_IfRecomCarriedOut'] %}
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            id="{{option}}"
+            name="{{e_assessment_content.index(e)+1}}if_recom_carried_out"
+            value="{{option}}"
+            checked
+            disabled
+          />
+          <label class="form-check-label" for="">{{option}}</label>
+        </div>
+        {% else %}
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            id="{{option}}"
+            name="if_recom_carried_out"
+            value="{{option}}"
+            disabled
+          />
+          <label class="form-check-label" for="">{{option}}</label>
+        </div>
+        {% endif %} {% endfor %}
+        <!-- E_table Comments -->
+        <br /><br />
+        <div class="form-group">
+          <label for="e_comments">Comments</label>
+          {% if e['e_rest']['E_Comments'] == None %}
+          <textarea
+            class="form-control"
+            id=""
+            name="e_comments"
+            rows="3"
+            disabled
+          ></textarea>
+          {% else %}
+          <textarea
+            class="form-control"
+            id=""
+            name="e_comments"
+            rows="3"
+            disabled
+          >
+{{e['e_rest']['E_Comments']}}</textarea
+          >
+        </div>
+        {% endif %}<br />
+        <!--  -->
+      </div>
+      <br /><br /><br />
+      {% endfor %}
+      <!-- Convenor rating area below -->
+      {% if final_assessment %}
+      <p class="h4">
+        Department/School&nbsp;{{finaliser_info['FinaliserRole']}}&nbsp;Assessment
+      </p>
+      <p>
+        {{finaliser_info['FinalisedDate']}}&nbsp;{{finaliser_info['FinalisedTime']}}
+      </p>
+      <hr />
+      <div class="form-container">
+        <label for="convenor_pgchair_name" class="form-label"
+          >{{finaliser_info['FinaliserRole']}}&nbsp;Name:</label
+        >
+        <input
+          type="text"
+          id="convenor_pgchair_name"
+          name="convenor_pgchair_name"
+          class="form-control"
+          disabled
+          value="{{finaliser_info['FinaliserName']}}"
+        />
+      </div>
+      <hr />
+      <p class="h5">Highlight any area needing closer consideration:</p>
+      <br />
+      <textarea
+        class="form-control"
+        id="convenorPgchairhightlight"
+        name="convenorPgchairhightlight"
+        rows="6"
+        disabled
+      >
+{{ final_assessment['E_ConvenorHighlight'] }}</textarea
+      >
+      <br /><br /><br />
+      <!-- Final rating here -->
+      <p>{{finaliser_info['FinaliserRole']}}&nbsp;to complete:</p>
+      {% for option in ['G','O','R'] %} {% if option ==
+      final_assessment['E_ConvenorRating'] %}
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="{{option}}"
+          name="convenor_rating"
+          value="{{option}}"
+          checked
+          disabled
+        />
+        <label class="form-check-label" for="">{{option}}</label>
+      </div>
+      {% else %}
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="{{option}}"
+          name="convenor_rating"
+          value="{{option}}"
+          disabled
+        />
+        <label class="form-check-label" for="">{{option}}</label>
+      </div>
+      {% endif %} {% endfor %}
+      <!-- Final rating above -->
+      {% endif %}
+    </div>
+    {% endif %} {% endif %} {% if session['role']!='Student' %} {% if
+    e_assessment_content %}
+    <div class="w3-container" id="E">
+      <h2 class="w3-Xlarge text-dark pt-5 mt-5">
+        Section E - Assessment of Student by Supervisor(s)
+      </h2>
+      <hr style="width: 50px; border: 5px solid" class="w3-round" />
+      <p>
+        This form will remain confidential to the Supervisor(s), Student,
+        Faculty Postgraduate Administrator/ Chairperson and Faculty Dean (or
+        nominee). Note that external supervisors/advisors/Tuakana are disabled
+        to complete this assessment form where the student is working primarily
+        offsite.<br /><br />Supervisors are disabled to use this form to comment
+        on students at six-monthly intervals, but this form may be used at any
+        time if problems arise. Students will subsequently receive a copy of
+        these forms with supervisors’ comments on them. If the student is
+        unhappy with these comments they can approach the Faculty Postgraduate
+        Chairperson (or the LU Postgraduate Director, see page 1) to discuss the
+        issue. If the student’s progress is unsatisfactory in a major way,
+        without prospects of resolution, further action may be taken (see the
+        PhD House Rules).
+      </p>
+      <br /><br /><br />
+
+      <!-- Section E Content section -->
+      {% for e in e_assessment_content %}
+      <div>
+        <p class="h4">
+          Supervisor Assessment&nbsp;{{e_assessment_content.index(e)+1}}
+        </p>
+        <p>
+          {{e['e_assessment_info']['CompletionDate']}}&nbsp;{{e['e_assessment_info']['CompletionTime']}}
+        </p>
+        <hr />
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="supervisor_name" class="form-label"
+              >Supervisor Name</label
+            >
+            <input
+              type="text"
+              id="supervisor_name"
+              name="supervisor_name"
+              class="form-control"
+              disabled
+              value="{{e['e_assessment_info']['SupervisorName']}}"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="supervisor_type" class="form-label"
+              >Supervisor Type</label
+            >
+
+            <input
+              type="text"
+              id="supervisor_type"
+              name="supervisor_type"
+              class="form-control"
+              disabled
+              value="{{e['e_assessment_info']['SupervisorType']}}"
+            />
+          </div>
+        </div>
+        <br /><br />
+        <p class="h5">
+          Please rate the student’s performance in the areas named below by
+          placing a tick in the appropriate boxes.
+        </p>
+        <br />
+        <!--  -->
+        <!-- Display E_Table Content -->
+        {% for et in e['e_table'] %}
+        <p>{{et['CriterionID']}}&period;&nbsp;{{et['Criterion']}}</p>
+        {% for option in e_rating_options %} {% if option == et['Result'] %}
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            id=""
+            name="{{e_assessment_content.index(e)+1}}{{et['CriterionID']}}"
+            value="{{option}}"
+            checked
+            disabled
+          />
+          <label class="form-check-label" for="">{{option}}</label>
+        </div>
+        {% else %}
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            id=""
+            name="assessment_criterion{{et['CriterionID']}}"
+            value="{{option}}"
+            disabled
+          />
+          <label class="form-check-label" for="">{{option}}</label>
+        </div>
+        {% endif %} {% endfor %}<br /><br />{% endfor %}
+        <!-- Extra Question -->
+        <p>
+          6&period;&nbsp;If a progress review meeting has taken place in the
+          period covered by this report, have any recommendations from that
+          meeting been carried out?
+        </p>
+        {% for option in e_irco_options %} {% if option ==
+        e['e_rest']['E_IfRecomCarriedOut'] %}
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            id="{{option}}"
+            name="{{e_assessment_content.index(e)+1}}if_recom_carried_out"
+            value="{{option}}"
+            checked
+            disabled
+          />
+          <label class="form-check-label" for="">{{option}}</label>
+        </div>
+        {% else %}
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            id="{{option}}"
+            name="if_recom_carried_out"
+            value="{{option}}"
+            disabled
+          />
+          <label class="form-check-label" for="">{{option}}</label>
+        </div>
+        {% endif %} {% endfor %}
+        <!-- E_table Comments -->
+        <br /><br />
+        <div class="form-group">
+          <label for="e_comments">Comments</label>
+          {% if e['e_rest']['E_Comments'] == None %}
+          <textarea
+            class="form-control"
+            id=""
+            name="e_comments"
+            rows="3"
+            disabled
+          ></textarea>
+          {% else %}
+          <textarea
+            class="form-control"
+            id=""
+            name="e_comments"
+            rows="3"
+            disabled
+          >
+{{e['e_rest']['E_Comments']}}</textarea
+          >
+        </div>
+        {% endif %}<br />
+        <!--  -->
+      </div>
+      <br /><br /><br />
+      {% endfor %}
+      <!-- Convenor rating area below -->
+      {% if final_assessment %}
+      <p class="h4">
+        Department/School&nbsp;{{finaliser_info['FinaliserRole']}}&nbsp;Assessment
+      </p>
+      <p>
+        {{finaliser_info['FinalisedDate']}}&nbsp;{{finaliser_info['FinalisedTime']}}
+      </p>
+      <hr />
+      <div class="form-container">
+        <label for="convenor_pgchair_name" class="form-label"
+          >{{finaliser_info['FinaliserRole']}}&nbsp;Name:</label
+        >
+        <input
+          type="text"
+          id="convenor_pgchair_name"
+          name="convenor_pgchair_name"
+          class="form-control"
+          disabled
+          value="{{finaliser_info['FinaliserName']}}"
+        />
+      </div>
+      <hr />
+      <p class="h5">Highlight any area needing closer consideration:</p>
+      <br />
+      <textarea
+        class="form-control"
+        id="convenorPgchairhightlight"
+        name="convenorPgchairhightlight"
+        rows="6"
+        disabled
+      >
+{{ final_assessment['E_ConvenorHighlight'] }}</textarea
+      >
+      <br /><br /><br />
+      <!-- Final rating here -->
+      <p>{{finaliser_info['FinaliserRole']}}&nbsp;to complete:</p>
+      {% for option in ['G','O','R'] %} {% if option ==
+      final_assessment['E_ConvenorRating'] %}
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="{{option}}"
+          name="convenor_rating"
+          value="{{option}}"
+          checked
+          disabled
+        />
+        <label class="form-check-label" for="">{{option}}</label>
+      </div>
+      {% else %}
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="{{option}}"
+          name="convenor_rating"
+          value="{{option}}"
+          disabled
+        />
+        <label class="form-check-label" for="">{{option}}</label>
+      </div>
+      {% endif %} {% endfor %}
+      <!-- Final rating above -->
+      {% endif %}
+    </div>
+    {% endif %}{% endif %}
+    <!-- End of Section E -->
+  </div>
+</div>
+
+{% endblock %}

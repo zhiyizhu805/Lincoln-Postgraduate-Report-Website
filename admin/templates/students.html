@@ -1,0 +1,465 @@
+{% extends 'dashboard.html' %} {% block title %}Profile{% endblock %} {% block
+content %}
+<div class="container">
+  <br />
+  {% with messages = get_flashed_messages() %} {% if messages %}
+  <ul class="flashes">
+    {% for message in messages %}
+    <div
+      class="alert alert-success alert-dismissible fade show"
+      role="alert"
+    >
+    {{ message }}
+    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"
+                      ></button>
+    {% endfor %}
+  </ul>
+  {% endif %} {% endwith %}
+  <div class="row"><h1 style="color: #fff">Students List</h1></div>
+  <br />
+  <div style="background-color: #fff; color: rgb(41, 40, 40)">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Status</th>
+          <th scope="col">Operation</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in studentList%}
+        <tr>
+          <th scope="row"><a href="/admin/studentemscho/{{student['StudentID']}}">{{student['StudentID']}}</a></th>
+          <td>{{student['name']}}</td>
+          <td>{{student['Email']}}</td>
+          <td>{{student['Status']}}</td>
+          <td>
+            <div class="row">
+              <div class="col-auto">
+                <a
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target="#student{{student['StudentID']}}"
+                  title="view"
+                >
+                  <span style="color: #2196f3"><i class="fas fa-eye"></i></span>
+                </a>
+              </div>
+              <div class="col-auto">
+                {% if student['Status']=='Active' %}
+                <a class="btn btn-sm btn-primary" href="/admin/student/suspend/{{student['StudentID']}}">Suspend</a>
+                {% elif student['Status']=='Suspended' %}
+                <a class="btn btn-sm btn-primary" href="/admin/student/unsuspend/{{student['StudentID']}}">Unsuspend</a>
+                {% endif %}
+              </div>
+              {% if student['Status']== "Approval required" %}
+              <div class="col-auto">
+                <a
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target="#approvestudent{{student['StudentID']}}"
+                  title="approve user"
+                >
+                  <span style="color: #ca6702"
+                    ><i class="fas fa-clipboard-check"></i
+                  ></span>
+                </a>
+              </div>
+              
+
+              <!-- approve account modal -->
+              <div
+                class="modal fade"
+                id="approvestudent{{student['StudentID']}}"
+                aria-hidden="true"
+                aria-labelledby="exampleModalToggleLabel"
+                tabindex="-1"
+              >
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="approveModalToggleLabel">
+                        Approve User Account
+                      </h1>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="row">
+                        <div class="col-md">
+                          User seeking approval: <b>{{student['name']}} </b>
+                          <b> (Student ID: {{student['StudentID']}})</b>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <form method="post" action="/admin/rejectStudent">
+                        <input
+                          type="hidden"
+                          name="email"
+                          value="{{student['Email']}}"
+                        />
+                        <input
+                          type="hidden"
+                          name="name"
+                          value="{{student['name']}}"
+                        />
+                        <button class="btn btn-danger" type="submit">
+                          Reject
+                        </button>
+                      </form>
+                      <button
+                        class="btn btn-primary"
+                        data-bs-target="#cpnfirmapprove{{student['StudentID']}}"
+                        data-bs-toggle="modal"
+                      >
+                        Approve
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="modal fade"
+                id="cpnfirmapprove{{student['StudentID']}}"
+                aria-hidden="true"
+                aria-labelledby="confirmModalToggleLabel2"
+                tabindex="-1"
+              >
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1
+                        class="modal-title fs-5"
+                        id="exampleModalToggleLabel2"
+                      >
+                        Email Confirmation of Registration
+                      </h1>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="row">
+                        <div class="col-md">
+                          Do you wish to send confirmation to
+                          <b>{{student['name']}}</b> <br />
+                          at their email address <b>{{student['Email']}}?</b>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <form method="post" action="/admin/approveStudent">
+                        <input
+                          type="hidden"
+                          name="email"
+                          value="{{student['Email']}}"
+                        />
+                        <input
+                          type="hidden"
+                          name="name"
+                          value="{{student['name']}}"
+                        />
+                        <button class="btn btn-primary" type="submit">
+                          Send Email
+                        </button>
+                      </form>
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {%endif%}
+            </div>
+          </td>
+        </tr>
+        <!--Student detail Modal -->
+        <div
+          class="modal fade"
+          id="student{{student['StudentID']}}"
+          tabindex="-1"
+          aria-labelledby="studentModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="studentModalLabel">
+                  Student Details - ID {{student['StudentID']}}
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Student Name: </b> {{student['name']}}
+                    </div>
+                  </div>
+                  <br />
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Enrolment Date: </b> {{student['EnrolmentDate']}}
+                    </div>
+                  </div>
+                  <br />
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Address: </b> {{student['Address']}}
+                    </div>
+                  </div>
+                  <br />
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Phone: </b> {{student['Phone']}}
+                    </div>
+                  </div>
+                  <br />
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Mode Of Study: </b> {{student['ModeOfStudy']}}
+                    </div>
+                  </div>
+                  <br />
+                  <div class="row">
+                    <div class="col-auto"><b>Thesis Title: </b></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md ms-auto">
+                      <p>{{student['ThesisTitle']}}</p>
+                    </div>
+                  </div>
+                  <br />
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Department Code: </b> {{student['DepartmentCode']}}
+                    </div>
+                  </div>
+                  <br />
+                </div>
+              </div>
+              <div class="modal-footer">
+                <a
+                  type="button"
+                  class="btn btn-primary"
+                  data-bs-dismiss="modal"
+                  href="/admin/students/edit"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editStudent{{student['StudentID']}}"
+                  title="Edit"
+                >
+                  Edit
+               </a>
+                
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" 
+          id="editStudent{{student['StudentID']}}" 
+          tabindex="-1" 
+          aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5">Edit Student Details - ID {{student['StudentID']}}</h1>
+                <button type="button" 
+                  class="btn-close" 
+                  data-bs-dismiss="modal" 
+                  aria-label="Close">
+                </button>
+              </div>
+              <div class="modal-body">
+                <!-- Edit student form -->
+                <form method="post" action="/admin/students/update">
+                  <div class="mb-3">
+                    <label for="editStudentID{{student['StudentID']}}" class="form-label" hidden>
+                      <b>Student ID:</b>
+                    </label>
+                    <input type="text" 
+                      class="form-control" 
+                      id="editStudentID{{student['StudentID']}}" 
+                      name="studentid" 
+                      value="{{student['StudentID']}}" 
+                      hidden>
+                  </div>
+                  <div class="mb-3">
+                    <label for="editName{{student['StudentID']}}" class="form-label">
+                      <b>Name:</b>
+                    </label>
+                    <input type="text" 
+                      class="form-control" 
+                      id="editName{{student['StudentID']}}" 
+                      name="name" 
+                      value="{{student['name']}}" 
+                      readonly>
+                  </div>
+                  <div class="mb-3">
+                    <label for="editEmail{{student['StudentID']}}" class="form-label">
+                      <b>Email:</b>
+                    </label>
+                    <input type="email" 
+                      class="form-control" 
+                      id="editEmail{{student['StudentID']}}" 
+                      name="email" 
+                      value="{{student['Email']}}" 
+                      readonly>
+                  </div>
+                  <div class="mb-3">
+                    <label for="editEnrolmentDate{{student['StudentID']}}" class="form-label">
+                      <b>Enrolment Date:</b>
+                    </label>
+                    <input type="text" 
+                      class="form-control" 
+                      id="editEnrolmentDate{{student['StudentID']}}" 
+                      name="enrolmentdate" 
+                      value="{{student['EnrolmentDate']}}" 
+                      readonly>
+                  </div>
+                  <div class="mb-3">
+                    <label for="editAddress{{student['StudentID']}}" class="form-label">
+                      <b>Address:</b>
+                    </label>
+                    <input type="text" 
+                      class="form-control" 
+                      id="editAddress{{student['StudentID']}}" 
+                      name="address" 
+                      value="{{student['Address']}}" 
+                      required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="editPhone{{student['StudentID']}}" class="form-label">
+                      <b>Phone:</b>
+                    </label>
+                    <input type="text" 
+                      class="form-control" 
+                      id="editPhone{{student['StudentID']}}" 
+                      name="phone" 
+                      minlength="7"
+                      maxlength="14"
+                      pattern="[0-9]+"
+                      value="{{student['Phone']}}" 
+                      title="invalid phone number"
+                      required>
+                    <div class="invalid-feedback">invalid phone number</div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="editModeOfStudy{{student['StudentID']}}" class="form-label">
+                      <b>Mode Of Study:</b>
+                    </label>
+                    <input type="text" 
+                      class="form-control" 
+                      id="editModeOfStudy{{student['StudentID']}}" 
+                      name="modeofstudy" 
+                      value="{{student['ModeOfStudy']}}" 
+                      required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="editThesisTitle{{student['StudentID']}}" class="form-label">
+                      <b>Thesis Title:</b>
+                    </label>
+                    <input type="text" 
+                      class="form-control" 
+                      id="editThesisTitle{{student['StudentID']}}" 
+                      name="thesistitle" 
+                      value="{{student['ThesisTitle']}}" 
+                      required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="editDepartmentCode{{student['StudentID']}}" class="form-label">
+                      <b>Department Code:</b>
+                    </label>
+                    <select name="departmentcode" id="editDepartmentCode{{student['StudentID']}}" class="form-select" aria-label="Default select example">
+                      {% for department in depList %}
+                      <option value="{{ department['DepartmentCode'] }}" {% if department['DepartmentCode'] == student['DepartmentCode'] %} selected {% endif %}>
+                          {{ department['DepartmentCode'] }} - {{ department['DepartmentName']}}
+                      </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                  
+                  
+                  <button type="submit" class="btn btn-primary">Save</button>
+                  <a type="button" class="btn btn-secondary" href="/admin/students">Cancel</a>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <!-- pagination -->
+  <div>
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        <li class="page-item">
+          {% if prev >= 1%}
+          <a
+            class="page-link"
+            href="/admin/students/page/{{prev}}"
+            aria-label="Previous"
+          >
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+          {%endif%}
+        </li>
+        {% for page in range(totalPages) %}
+        <li class="page-item">
+          <a class="page-link" href="/admin/students/page/{{loop.index}}"
+            >{{loop.index}}</a
+          >
+        </li>
+        {%endfor%}
+        <li class="page-item">
+          {% if next <= totalPages %}
+          <a
+            class="page-link"
+            href="/admin/students/page/{{next}}"
+            aria-label="Next"
+          >
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+          {%endif%}
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,386 @@
+{% extends 'dashboard.html' %} {% block title %}Profile{% endblock %} {% block
+content %}
+<div class="container">
+  <br />
+  <div class="row justify-content-center">
+    <div class="col-6"><h1 style="color: #fff">6MR List</h1></div>
+    <div class="col-2" style="text-align: right">
+      <a
+        class="btn btn-primary"
+        data-bs-toggle="collapse"
+        href="#collapseFilter"
+        role="button"
+        aria-expanded="false"
+        aria-controls="collapseFilter"
+      >
+        Report Filter
+      </a>
+    </div>
+    <div class="col-2" style="text-align: right">
+      <a
+        class="btn btn-primary"
+        data-bs-toggle="collapse"
+        href="#collapseSearch"
+        role="button"
+        aria-expanded="false"
+        aria-controls="collapseSearch"
+      >
+        Search By Student
+      </a>
+    </div>
+    <div class="col-2" style="text-align: right">
+      <a
+        class="btn btn-primary"
+        href="{{ url_for('admin.reportList') }}"
+        role="button"
+      >
+        Reset List
+      </a>
+    </div>
+  </div>
+  <!-- filter section -->
+  <div class="collapse" id="collapseFilter">
+    <form name="listFilter" method="GET">
+      <div class="row justify-content-end">
+        <div class="col-2">
+          <div class="form-floating">
+            <select
+              class="form-select"
+              id="floatingSelect"
+              aria-label="Floating label select example"
+              name="period"
+            >
+              <option value="">All</option>
+              <option value="2022-06-30"  {% if period == "2022-06-30" %} selected {%endif%}>2022-06-30</option>
+              <option value="2022-12-31" {% if period == "2022-12-31" %} selected {%endif%}>2022-12-31</option>
+              <option value="2023-06-30" {% if period == "2023-06-30" %} selected {%endif%}>Current</option>
+            </select>
+            <label for="floatingSelect">Select a period</label>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="form-floating">
+            <select
+              class="form-select"
+              id="floatingSelect"
+              aria-label="Floating label select example"
+              name="department"
+            >
+              <option value="">All</option>
+              <option value="SOLA" {% if dep == "SOLA" %} selected {%endif%}>SOLA</option>
+              <option value="DEM" {% if dep == "DEM" %} selected {%endif%}>DEM</option>
+              <option value="DTSS"{% if dep == "DTSS" %} selected {%endif%}>DTSS</option>
+            </select>
+            <label for="floatingSelect">Select Department</label>
+          </div>
+        </div>
+        <div class="col-2">
+          <div class="form-floating">
+            <select
+              class="form-select"
+              id="floatingSelect"
+              aria-label="Floating label select example"
+              name="repStatus"
+            >
+              <option value="">All</option>
+              <option value="Completed" {% if repStatus == "Completed" %} selected {%endif%}>Completed</option>
+              <option value="Uncomplete" {% if repStatus == "Uncomplete" %} selected {%endif%}>Uncomplete</option>
+              <option value="Norecord" {% if repStatus == "Norecord" %} selected {%endif%}>No record</option>
+            </select>
+            <label for="floatingSelect">Select Status</label>
+          </div>
+        </div>
+        <div class="col-2">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            style="padding: auto; height: 100%; width: 100%"
+          >
+            <b>Filter</b>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <!-- section ends -->
+  <!-- search section -->
+  <div class="row">
+    <div class="collapse" id="collapseSearch">
+      <div class="row justify-content-end">
+        <div class="col-auto">
+          <form class="form-floating" name="searchByStudent" method="GET">
+            <input
+              type="text"
+              class="form-control"
+              id="floatingInputValue"
+              name="studentSearch"
+              onchange="document.forms['searchByStudent'].submit();"
+            />
+            <label for="floatingInputValue">Type Student Id or Name</label>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- section ends -->
+
+  <br />
+  <div
+    style="background-color: #fff; color: rgb(41, 40, 40); padding-bottom: 10%;"
+    class="table-responsive"
+  >
+  
+    <table class="table align-middle">
+      <thead style="font-size: small">
+        <tr>
+          <th scope="col">Student ID</th>
+          <th scope="col">Student Name</th>
+          <th scope="col">Department</th>
+          <th scope="col">Report ID</th>
+          <th scope="col">Report Period</th>
+          <!-- <th scope="col">Student</th>
+          <th scope="col">Supervisor</th>
+          <th scope="col">Convenor</th> -->
+          <th scope="col">Completion</th>
+          <th scope="col">Status</th>
+          <th scope="col">Report Order</th>
+          <th scope="col">Operation</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        {% for report in reportsWithStatus%}
+        <tr class="align-middle">
+          <th scope="row" class="align-middle">{{report['StudentID']}}</th>
+          <td class="align-middle">{{report['name']}}</td>
+          <td class="align-middle">{{report['Dep']}}</td>
+          {%if report['ReportID'] %}
+          <td class="align-middle">
+            <a
+              href="/admin/reportTracker?reportId={{report['ReportID']}}"
+              title="track"
+              >{{report['ReportID']}}</a
+            >
+          </td>
+          {%else%}
+          <td class="align-middle">
+            <a
+              type="button"
+              data-bs-toggle="modal"
+              data-bs-target="#studentReminder{{report['StudentID']}}"
+            >
+              <span style="color: #bc4749" title="Report record is not found"
+                ><i class="fas fa-exclamation-circle"></i></span
+            ></a>
+          </td>
+          <!-- modal section -->
+          <div
+            class="modal fade"
+            id="studentReminder{{report['StudentID']}}"
+            tabindex="-1"
+            aria-labelledby="studentModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="studentModalLabel">
+                    Send Email Reminder
+                  </h1>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-auto">
+                        <b>Send reminder to</b>: {{report['name']}} ?
+                      </div>
+                    </div>
+                    <br />
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
+
+                  <form method="post" action="admin/remindStudent">
+                    <input
+                      type="hidden"
+                      name="email"
+                      value=" {{report['email']}}"
+                    />
+                    <input
+                      type="hidden"
+                      name="name"
+                      value=" {{report['name']}}"
+                    />
+                    <button type="submit" class="btn btn-primary">
+                      Send Reminder
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end -->
+          {%endif%} {%if report['ReportID'] %}
+
+          
+          <td class="align-middle">{{report['period']}}</td>
+          <td class="align-middle">
+            <div
+              id="circleBar{{report['ReportID']}}"
+              style="width: 80px; height: 80px"
+            ></div>
+          </td>
+          <td class="align-middle">{{report['Status']}}</td>
+          <td class="align-middle">{{report['Order']}}</td>
+          <td class="align-middle">
+            {% if report['Completion']==100 %}
+            <a
+                style="text-decoration: none"
+                href="{{url_for('admin.viewReport', reportId=report['ReportID'])}}"
+                ><span style="color: #4187f0" title="view report"
+              ><i class="fas fa-eye"></i
+            ></span></a>
+            <a
+              type="button"
+              data-bs-toggle="modal"
+              data-bs-target="#reportComfirmation{{report['StudentID']}}"
+            >
+              <span
+                style="color: #4187f0; padding-left: 50%"
+                title="send report confirmation"
+                ><i class="fas fa-envelope"></i></span
+            ></a>
+            <!-- modal section -->
+            <div
+              class="modal fade"
+              id="reportComfirmation{{report['StudentID']}}"
+              tabindex="-1"
+              aria-labelledby="reportComfirmationModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="studentModalLabel">
+                      Send Report Confirmation
+                    </h1>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="container">
+                      <div class="row">
+                        <div class="col-auto">
+                          <b>Send confirmation to all the submitters?</b>
+                        </div>
+                      </div>
+                      <br />
+                    </div>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+
+                    <form method="post" action="admin/confirmReport">
+                      <input
+                        type="hidden"
+                        name="reportId"
+                        value="{{ report['ReportID']}}"
+                      />
+
+                      <button type="submit" class="btn btn-primary">
+                        Send Confirmation
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- end -->
+            {%endif%}
+          </td>
+          {%else%}
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          {%endif%}
+        </tr>
+        <script type="text/javascript">
+          var myChart = echarts.init(
+            document.getElementById("circleBar{{report['ReportID']}}")
+          );
+          var x = "{{report['Completion']}}";
+          var y = 100 - x;
+          option = {
+            tooltip: {
+              trigger: "item",
+            },
+
+            series: [
+              {
+                name: "6MR completion(%)",
+                type: "pie",
+                radius: ["60%", "80%"],
+                avoidLabelOverlap: false,
+                color: ["gray", "green"],
+                label: {
+                  show: false,
+                  position: "center",
+                },
+                emphasis: {
+                  label: {
+                    show: false,
+                    fontSize: 20,
+                    fontWeight: "bold",
+                  },
+                },
+                labelLine: {
+                  show: false,
+                },
+                data: [
+                  { value: y, name: "uncompleted" },
+                  { value: x, name: "completed" },
+                ],
+              },
+            ],
+          };
+
+          myChart.setOption(option);
+        </script>
+        {%endfor%}
+        
+      </tbody>
+    </table>
+    {% if filterMsg%}
+    <div class="row justify-content-center"><div class="col" style="text-align: center;">{{filterMsg}}</div></div>
+    {%endif%}
+  </div>
+ 
+</div>
+
+{% endblock %}

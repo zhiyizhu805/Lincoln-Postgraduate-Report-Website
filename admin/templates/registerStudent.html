@@ -1,0 +1,171 @@
+{% extends 'dashboard.html' %} {% block title %}Profile{% endblock %} {% block
+content %}
+<div class="container">
+  <br />
+  <div class="row"><h1 style="color: #fff">Register a student</h1></div>
+  <br />
+  <div style="background-color: #fff; padding-left: 5%; padding-bottom: 5%">
+    <form action="admin/addStudent" method="post" class="needs-validation" novalidate>
+      <br />
+      <div class="row gy-2">
+        <div class="col-3">
+          <label for="id" class="col-form-label">Student ID:</label>
+        </div>
+        <div class="col-3">
+          <input
+            type="number"
+            class="form-control"
+            id="id"
+            name="id"
+            minlength="7"
+            maxlength="7"
+            min="1000000"
+            max="9999999"
+            required
+          />
+          <div class="invalid-feedback">student ID must be 7 digits</div>
+        </div>
+        
+      </div>
+      <br />
+      <div class="row gy-2">
+        <div class="col-3">
+          <label for="fname" class="col-form-label">First Name:</label>
+        </div>
+        <div class="col-3">
+          <input
+            type="text"
+            class="form-control"
+            id="fname"
+            name="fname"
+            required
+          />
+          <div class="invalid-feedback">invalid name</div>
+        </div>
+        
+      </div>
+      <br />
+      <div class="row gy-2">
+        <div class="col-3">
+          <label for="id" class="col-form-label">Last Name:</label>
+        </div>
+        <div class="col-3">
+          <input
+            type="text"
+            class="form-control"
+            id="lname"
+            name="lname"
+            required
+          />
+          <div class="invalid-feedback">invalid name</div>
+        </div>
+        
+      </div>
+      <br />
+      
+        
+      
+     
+      <div class="row gy-2">
+        <div class="col-3">
+          <label for="address" class="col-form-label">Address:</label>
+        </div>
+        <div class="col-3">
+          <input
+            type="text"
+            class="form-control"
+            id="address"
+            name="address"
+            required
+          />
+          <div class="invalid-feedback">invalid address</div>
+        </div>
+       
+      </div>
+      <br />
+      <div class="row gy-2">
+        <div class="col-3">
+          <label for="phone" class="col-form-label">Phone Number:</label>
+        </div>
+        <div class="col-3">
+          <input
+            type="number"
+            class="form-control"
+            id="phone"
+            name="phone"
+            minlength="10"
+            maxlength="10"
+            min="100000000"
+            max="9999999999"
+            required
+          />
+          <div class="invalid-feedback">invalid phone number</div>
+        </div>
+        
+      </div>
+      </br>
+      <div class="row gy-2">
+        <div class="col-3">
+          <label for="email" class="col-form-label">Email:</label>
+        </div>
+        <div class="col-3">
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            required
+          />
+          <div class="invalid-feedback">invalid email address</div>
+        </div>
+        
+      </div>
+      </br>
+      
+      
+      
+      <div class="row gy-2">
+        <div class="col-3">
+          <label for="pwd" class="col-form-label">Password:</label>
+        </div>
+        <div class="col-3">
+          <input
+            type="password"
+            class="form-control"
+            id="pwd"
+            name="pwd"
+            minlength="8"
+            maxlength="8"
+            required
+          />
+        </div>
+        <div class="invalid-feedback">Password must be 8 characters</div>
+      </div>
+      <br />
+      <div class="row gy-2">
+        <div class="col-3">
+          <label for="conpwd" class="col-form-label">Confirm Password:</label>
+        </div>
+        <div class="col-3">
+          <input
+            type="password"
+            class="form-control"
+            id="conpwd"
+            name="conpwd"
+            minlength="8"
+            maxlength="8"
+            required
+          />
+        </div>
+        <small style="color: red" id="passwordNotMatch"></small>
+      </div>
+      <br />
+      <div class="mb-3" style="text-align: center">
+        <button type="submit" class="btn btn-primary">Register</button>
+      </div>
+    </form>
+    <br>
+
+  </div>
+</div>
+  {% endblock %}

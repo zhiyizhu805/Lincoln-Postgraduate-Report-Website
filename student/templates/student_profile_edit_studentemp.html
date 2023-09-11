@@ -1,0 +1,155 @@
+{% extends 'user_base.html' %} {% block title %}Profile{% endblock %} {% block
+content %}
+<div>
+  <h1>Edit My Profile</h1>
+  <hr />
+</div>
+<div>
+  <h3>Current Employment Information:</h3>
+  <br />
+  {% for emp in student_emp %}
+  <form
+    action="/student/profile/edit/studentemp/process"
+    method="POST"
+    class="myForm"
+    onsubmit="return validateForm()"
+  >
+    <div class="form-group row">
+      <label for="employmentid" class="col-sm-3 col-form-label"
+        ><strong>Employment ID:</strong></label
+      >
+      <div class="col-sm-9">
+        <input
+          type="number"
+          id="employmentid"
+          name="employmentid"
+          class="form-control"
+          readonly
+          value="{{ emp['EmploymentID'] }}"
+        />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="supervisorname" class="col-sm-3 col-form-label"
+        ><strong>Supervisor Name:</strong></label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          id="supervisorname"
+          name="supervisorname"
+          class="form-control"
+          readonly
+          value="{{ emp['Supervisor Name'] }}"
+        />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="employmenttype" class="col-sm-3 col-form-label"
+        ><strong>Employment Type:</strong></label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          id="employmenttype"
+          name="employmenttype"
+          class="form-control"
+          readonly
+          value="{{ emp['EmploymentType'] }}"
+        />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="weeklyhours" class="col-sm-3 col-form-label"
+        ><strong>Weekly Hours:</strong></label
+      >
+      <div class="col-sm-9">
+        <input
+          type="number"
+          id="weeklyhours"
+          name="weeklyhours"
+          class="form-control"
+          min="0"
+          max="40"
+          value="{{ emp['WeeklyHours'] }}"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="startdate" class="col-sm-3 col-form-label"
+        ><strong>Start Date:</strong></label
+      >
+      <div class="col-sm-9">
+        <input
+          type="date"
+          id="startdate"
+          name="startdate"
+          class="form-control"
+          required
+          value="{{ emp['StartDate'] }}"
+        />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="enddate" class="col-sm-3 col-form-label"
+        ><strong>End Date:</strong></label
+      >
+      <div class="col-sm-9">
+        <input
+          type="date"
+          id="enddate"
+          name="enddate"
+          class="form-control"
+          value="{{ emp['EndDate'] }}"
+        />
+      </div>
+    </div>
+    <br />
+    <br />
+
+    {% endfor %}
+    <div
+      class="form-group row align-center"
+      style="display: flex; justify-content: center"
+    >
+      <button
+        class="btn btn-primary mb-3 mr-2"
+        type="submit"
+        name="save"
+        style="width: 12%"
+        value=""
+      >
+        Save
+      </button>
+      <a
+        type="button"
+        class="btn btn-secondary mb-3"
+        style="width: 12%"
+        href="/student/profile"
+        >Cancel</a
+      >
+    </div>
+  </form>
+
+  <script>
+    function validateForm() {
+      var startDate = document.getElementById("startdate").value;
+      var endDate = document.getElementById("enddate").value;
+
+      if (endDate !== "" && startDate > endDate) {
+        alert("End date cannot be earlier than the start date.");
+        return false; // Prevent form submission
+      }
+
+      return true; // Allow form submission
+    }
+  </script>
+
+  {% endblock %}
+</div>

@@ -1,0 +1,104 @@
+{% extends 'user_base.html' %} {% block title %}My Profile{% endblock %} {%
+block content %}
+<div>
+  <div>
+    <h1>Edit My Profile</h1>
+    <hr />
+  </div>
+  <form action="/supervisor/profile/edit/process" method="POST" class="myForm">
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="staffname"><strong>Name:</strong></label>
+        <input
+          type="text"
+          id="staffname"
+          name="staffname"
+          class="form-control"
+          readonly
+          value="{{ staff['Staff Name'] }}"
+        />
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="phone"><strong>Phone:</strong></label>
+        <input
+          type="text"
+          id="phone"
+          name="phone"
+          class="form-control"
+          required
+          minlength="7"
+          maxlength="14"
+          pattern="[0-9]+"
+          title="A valid phone number between 7 to 14 digits."
+          value="{{ staff['Phone'] }}"
+        />
+        <div class="invalid-feedback">A valid phone number between 7 to 14 digits.</div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="email"><strong>Email:</strong></label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          readonly
+          value="{{ staff['Email'] }}"
+        />
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="departmentname"><strong>Department Name:</strong></label>
+        <input
+          type="text"
+          id="departmentname"
+          name="departmentname"
+          class="form-control"
+          readonly
+          value="{{ staff['DepartmentName'] }}"
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <label for="faculty"><strong>Faculty:</strong></label>
+        <input
+          type="text"
+          id="faculty"
+          name="faculty"
+          class="form-control"
+          readonly
+          value="{{ staff['Faculty'] }}"
+        />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-sm-3"></div>
+      <div class="col-sm-9 d-flex align-items-center">
+        <button
+          class="btn btn-primary mb-3 mr-2"
+          type="submit"
+          name="save"
+          style="width: 20%"
+          value=""
+        >
+          Save
+        </button>
+        <a
+          type="button"
+          class="btn btn-secondary mb-3"
+          style="width: 20%"
+          href="/supervisor/profile"
+          >Cancel</a
+        >
+      </div>
+    </div>
+  </form>
+
+  {% endblock %}
+</div>

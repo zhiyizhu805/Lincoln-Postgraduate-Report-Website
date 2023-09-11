@@ -1,0 +1,159 @@
+{% extends 'user_base.html' %} {% block title %}My Reports{% endblock %} {%
+block content %}
+<div>
+  <div>
+    <h1>My Reports</h1>
+    <hr />
+  </div>
+  <!-- flash message here -->
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %} {% for category, message in messages %} {% if category =="success"
+  %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+
+  {% elif category == "warning" %}
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+
+  {% endif %} {% endfor %} {% endif %} {% endwith %}
+  <!-- end flash message-->
+  <div>
+    {% if reports != [] %}
+    <table class="table">
+      <thead class="table table-secondary table-hover table-striped">
+        <tr>
+          <th scope="col">Report<br />ID</th>
+          <th scope="col">End<br />Date</th>
+          <th scope="col">Report<br />Order</th>
+          <th scope="col">Student<br />ID</th>
+          <th scope="col">Student<br />Name</th>
+          <th scope="col">Status</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      {% for x in reports %}
+      <tbody>
+        {% if x['Status'] == 'Performance rating pending' and
+        x['IsSupervisor']==True %}
+        <tr>
+          <td>{{x['Report ID']}}</td>
+          <td>{{x['End Date']}}</td>
+          <td>{{x['Report Order']}}</td>
+          <td>{{x['Student ID']}}</td>
+          <td>{{x['Student Name']}}</td>
+          <td>
+            <form
+              action="/pgChair/report_status_desc/{{x['Report ID']}}"
+              method="POST"
+            >
+              <button type="submit" class="report_status_button">
+                {{x['Status']}}({{x['Percentage']}})
+              </button>
+            </form>
+          </td>
+
+          <td>
+            <a
+              href="/supervisor/my_reports/{{x['Student ID']}}/{{x['Report ID']}}"
+              type="button"
+              class="btn btn-primary"
+              target="_blank"
+              >View</a
+            >
+            {% if x['HasAssessed']==False %}
+            <a
+              href="/supervisor/rate_student/{{x['Student ID']}}/{{x['Report ID']}}"
+              type="button"
+              class="btn btn-success"
+              >Rate</a
+            >{% endif %}
+          </td>
+        </tr>
+        {% endif %} {% if x['Status']=='Final rating pending' %}
+        <tr>
+          <td>{{x['Report ID']}}</td>
+          <td>{{x['End Date']}}</td>
+          <td>{{x['Report Order']}}</td>
+          <td>{{x['Student ID']}}</td>
+          <td>{{x['Student Name']}}</td>
+          <td>
+            <form
+              action="/pgChair/report_status_desc/{{x['Report ID']}}"
+              method="POST"
+            >
+              <button type="submit" class="report_status_button">
+                {{x['Status']}}
+              </button>
+            </form>
+          </td>
+          <td>
+            <a
+              href="/supervisor/my_reports/{{x['Student ID']}}/{{x['Report ID']}}"
+              type="button"
+              class="btn btn-primary"
+              target="_blank"
+              >View</a
+            >
+            {% if x['IsSupervisor']==False %}
+            <a
+              href="/convenor/final_rating/{{x['Student ID']}}/{{x['Report ID']}}"
+              type="button"
+              class="btn btn-success"
+              >Rate</a
+            >{% endif %}
+          </td>
+        </tr>
+        {% endif %}{% if x['Status']=='Finalised' %}
+        <tr>
+          <td>{{x['Report ID']}}</td>
+          <td>{{x['End Date']}}</td>
+          <td>{{x['Report Order']}}</td>
+          <td>{{x['Student ID']}}</td>
+          <td>{{x['Student Name']}}</td>
+          <td>
+            <form
+              action="/pgChair/report_status_desc/{{x['Report ID']}}"
+              method="POST"
+            >
+              <button type="submit" class="report_status_button">
+                {{x['Status']}}
+              </button>
+            </form>
+          </td>
+          <td>
+            <a
+              href="/supervisor/my_reports/{{x['Student ID']}}/{{x['Report ID']}}"
+              type="button"
+              class="btn btn-primary"
+              target="_blank"
+              >View</a
+            >
+          </td>
+        </tr>
+        {% endif %}
+      </tbody>
+      {% endfor %}
+    </table>
+    {% else %}
+
+    <p>You have no reports submitted to you for this reporting period.</p>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

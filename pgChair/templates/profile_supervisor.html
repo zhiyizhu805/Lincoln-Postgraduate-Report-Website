@@ -1,0 +1,86 @@
+{% extends 'user_base.html' %} {% block title %}My Profile{% endblock %} {%
+block content %}
+<div>
+  <div>
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <ul class="flashes">
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+    <h1>Supervisor's Profile</h1>
+    <hr />
+  </div>
+  <form>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="staffname"><strong>Name:</strong></label>
+        <input
+          type="text"
+          id="staffname"
+          name="staffname"
+          class="form-control"
+          readonly
+          value="{{ supervisor_info['Staff Name'] }}"
+        />
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="phone"><strong>Phone:</strong></label>
+        <input
+          type="number"
+          id="phone"
+          name="phone"
+          class="form-control"
+          readonly
+          value="{{ supervisor_info['Phone'] }}"
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="email"><strong>Email:</strong></label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          readonly
+          value="{{ supervisor_info['Email'] }}"
+        />
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="departmentname"><strong>Department Name:</strong></label>
+        <input
+          type="text"
+          id="departmentname"
+          name="departmentname"
+          class="form-control"
+          readonly
+          value="{{ supervisor_info['DepartmentName'] }}"
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <label for="faculty"><strong>Faculty:</strong></label>
+        <input
+          type="text"
+          id="faculty"
+          name="faculty"
+          class="form-control"
+          readonly
+          value="{{ supervisor_info['Faculty'] }}"
+        />
+      </div>
+    </div>
+
+    <br /><br />
+  </form>
+</div>
+
+{% endblock %}

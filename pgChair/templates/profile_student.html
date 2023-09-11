@@ -1,0 +1,292 @@
+{% extends 'user_base.html' %} {% block title %}Profile{% endblock %} {% block
+content %}
+<div>
+  <h1>Student's Profile</h1>
+  <hr />
+</div>
+<div>
+  <br />
+  <p class="h5">Basic Information</p>
+  <form>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="studentid"><strong>Student ID:</strong></label>
+        <input
+          type="number"
+          id="studentid"
+          name="studentid"
+          class="form-control"
+          readonly
+          value="{{ student_info['StudentID'] }}"
+        />
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="studentname"><strong>Student Name:</strong></label>
+        <input
+          type="text"
+          id="studentname"
+          name="studentname"
+          class="form-control"
+          readonly
+          value="{{ student_info['Student Name'] }}"
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="enrolmentdate"><strong>Enrolment Date:</strong></label>
+        <input
+          type="date"
+          id="enrolmentdate"
+          name="enrolmentdate"
+          class="form-control"
+          readonly
+          value="{{ student_info['EnrolmentDate'] }}"
+        />
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="modeofstudy"><strong>Mode Of Study:</strong></label>
+        <input
+          type="text"
+          id="modeofstudy"
+          name="modeofstudy"
+          class="form-control"
+          readonly
+          value="{{ student_info['ModeOfStudy'] }}"
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="phone"><strong>Phone:</strong></label>
+        <input
+          type="text"
+          id="phone"
+          name="phone"
+          class="form-control"
+          readonly
+          value="{{ student_info['Phone'] }}"
+        />
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="email"><strong>Email:</strong></label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          readonly
+          value="{{ student_info['Email'] }}"
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <label for="address"><strong>Address:</strong></label>
+        <input
+          type="text"
+          id="address"
+          name="address"
+          class="form-control"
+          readonly
+          value="{{ student_info['Address'] }}"
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <label for="thesistitle"><strong>Thesis Title:</strong></label>
+        <input
+          type="text"
+          id="thesistitle"
+          name="thesistitle"
+          class="form-control"
+          readonly
+          value="{{ student_info['ThesisTitle'] }}"
+        />
+      </div>
+    </div>
+  </form>
+</div>
+<br />
+<p class="h5">Supervision Team</p>
+<hr />
+<div class="form-row">
+  {% for sup in student_sup %}
+  <div class="form-group col-md-4">
+    <label for="supervisorname"
+      ><strong>{{ sup['SupervisorType'] }}:</strong></label
+    >
+    <input
+      type="text"
+      id="supervisorname"
+      name="supervisorname"
+      class="form-control"
+      readonly
+      value="{{ sup['Supervisor Name'] }}"
+    />
+  </div>
+  {% endfor %}
+</div>
+
+<br />
+<p class="h5">Student's Current Employment Information:
+  <a type="button" class="btn btn-outline-secondary" href="{{ url_for('pgChair.button_clicked', argument=student_info['Email']) }}"  title="employment history" >
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+  <path d="M8 1C4.686 1 2 3.459 2 6c0 2.046 2.417 3.706 5.5 3.982V11.5a.5.5 0 0 0 1 0v-.518C11.583 9.706 14 8.046 14 6c0-2.541-2.686-5-6-5zm0 1.5a3.5 3.5 0 0 0-3.463 3.083A3.467 3.467 0 0 0 4.5 8a3.5 3.5 0 0 0 6.963-.417A3.467 3.467 0 0 0 11.5 6a3.5 3.5 0 0 0-3.5-3.5zm0 1.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
+  </svg>
+      <span class="visually-hidden"></span>
+</a>
+</p>
+<hr />
+{% for emp in student_emp %}
+<div class="form-row">
+  <div class="form-group col-md-3">
+    <label for="employmenttype"><strong>Employment Type:</strong></label>
+    <input
+      type="text"
+      id="employmenttype"
+      name="employmenttype"
+      class="form-control"
+      readonly
+      value="{{ emp['EmploymentType'] }}"
+    />
+  </div>
+
+      <div class="form-group col-md-3">
+        <label for="supervisorname"><strong>Supervisor Name:</strong></label>
+        <input
+          type="text"
+          id="supervisorname"
+          name="supervisorname"
+          class="form-control"
+          readonly
+          value="{{ emp['Supervisor Name'] }}"
+        />
+      </div>
+
+      <div class="form-group col-md-2">
+        <label for="weeklyhours"><strong>Weekly Hours:</strong></label>
+        <input
+          type="number"
+          id="weeklyhours"
+          name="weeklyhours"
+          class="form-control"
+          readonly
+          value="{{ emp['WeeklyHours'] }}"
+        />
+      </div>
+
+      <div class="form-group col-md-2">
+        <label for="startdate"><strong>Start Date:</strong></label>
+        <input
+          type="text"
+          id="startdate"
+          name="startdate"
+          class="form-control"
+          readonly
+          value="{{ emp['StartDate'] }}"
+        />
+      </div>
+
+      <div class="form-group col-md-2">
+        <label for="enddate"><strong>End Date:</strong></label>
+        {% if emp['EndDate'] is none %}
+        <input
+          type="text"
+          id="enddate"
+          name="enddate"
+          class="form-control"
+          readonly
+          value="Ongoing"
+        />
+        {% else %}
+        <input
+          type="text"
+          id="enddate"
+          name="enddate"
+          class="form-control"
+          readonly
+          value="{{ emp['EndDate'] }}"
+        />
+        {% endif %}
+      </div>
+    </div>
+
+    {% endfor %}
+
+    <br />
+    <p class="h5">Student's Current Scholarships:
+      <a type="button" class="btn btn-outline-secondary" href="{{ url_for('pgChair.button_clicked_sch', argument=student_info['Email']) }}"  title="scholarships history" >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+        <path d="M8 1C4.686 1 2 3.459 2 6c0 2.046 2.417 3.706 5.5 3.982V11.5a.5.5 0 0 0 1 0v-.518C11.583 9.706 14 8.046 14 6c0-2.541-2.686-5-6-5zm0 1.5a3.5 3.5 0 0 0-3.463 3.083A3.467 3.467 0 0 0 4.5 8a3.5 3.5 0 0 0 6.963-.417A3.467 3.467 0 0 0 11.5 6a3.5 3.5 0 0 0-3.5-3.5zm0 1.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
+        </svg>
+            <span class="visually-hidden"></span>
+      </a>
+    </p>
+    <br />
+    {% for scho in student_scholar %}
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label for="scholarship_name"
+            ><strong>Scholarship Name:</strong></label
+          >
+          <input
+            type="text"
+            id="scholarship_name"
+            name="scholarship_name"
+            class="form-control"
+            readonly
+            value="{{ scho['Name'] }}"
+          />
+        </div>
+
+        <div class="form-group col-md-3">
+          <label for="scholarship_value"
+            ><strong>Scholarship Value:</strong></label
+          >
+          <input
+            type="number"
+            id="scholarship_value"
+            name="scholarship_value"
+            class="form-control"
+            readonly
+            value="{{ scho['Value'] }}"
+          />
+        </div>
+
+        <div class="form-group col-md-3">
+          <label for="startdate"><strong>Start Date:</strong></label>
+          <input
+            type="text"
+            id="startdate"
+            name="startdate"
+            class="form-control"
+            readonly
+            value="{{ scho['StartDate'].strftime('%d-%m-%Y') }}"
+          />
+        </div>
+
+        <div class="form-group col-md-3">
+          <label for="tenure"><strong>End Date:</strong></label>
+          <input
+            type="text"
+            id="tenure"
+            name="tenure"
+            class="form-control"
+            readonly
+            value="{{ scho['EndDate'].strftime('%d-%m-%Y') }}"
+          />
+        </div>
+      </div>
+
+      {% endfor %}
+    {% endblock %}
+</div>

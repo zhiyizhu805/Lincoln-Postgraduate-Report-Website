@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Performance Rating - Lincoln Monitoring</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='/css/dashboard.css') }}"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+      integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
+  </head>
+  <body style="background-color: white">
+    <!-- Navbar (sit on top) -->
+    <div class="w3-top">
+      <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+        <a href="/" class="w3-bar-item w3-button"><b>Lincoln </b> Monitoring</a>
+        <!-- Float links to the right. Hide them on small screens -->
+        <div class="w3 w3-hide-small">
+          <p class="w3-bar-item">Hi {{ session['first_name']|title }}!</p>
+        </div>
+        <div class="w3-right w3-hide-small">
+          <a
+            href="{{ url_for('account.logout') }}"
+            class="w3-bar-item w3-button"
+            >Log Out</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <!-- User's Universal Sidebar/menu -->
+      <nav
+        class="w3-sidebar w3-blue w3-collapse w3-top w3-large w3-padding"
+        style="z-index: 3; width: 300px; font-weight: bold"
+        id="mySidebar"
+      >
+        <br />
+        <a
+          href="javascript:void(0)"
+          onclick="w3_close()"
+          class="w3-button w3-hide-large w3-display-topleft"
+          style="width: 100%; font-size: 22px"
+          >Close Menu</a
+        >
+        <div class="w3-container">
+          <h3 class="w3-padding-64">
+            <b>6 Month Report</b>
+          </h3>
+        </div>
+        <div class="w3-bar-block">
+          {% if session['role'] == 'Supervisor' %}
+          <a
+            href="{{ url_for('supervisor.dashboard') }}"
+            onclick="w3_close()"
+            class="w3-bar-item w3-button w3-hover-white"
+            >Dashboard</a
+          >{% endif %} {% if session['role'] == 'Convenor' %}
+          <a
+            href="{{ url_for('convenor.dashboard') }}"
+            onclick="w3_close()"
+            class="w3-bar-item w3-button w3-hover-white"
+            >Dashboard</a
+          >{% endif %}
+          <hr />
+          <a
+            href="#E"
+            onclick="w3_close()"
+            class="w3-bar-item w3-button w3-hover-white"
+            >Section E<br /><small>Rate student performance</small></a
+          >
+          <a
+            href="#"
+            onclick="goBack()"
+            class="w3-bar-item w3-button w3-hover-white"
+            >Back</a
+          >
+          <hr />
+
+          <a
+            href="#S"
+            onclick="w3_close()"
+            class="w3-bar-item w3-button w3-hover-white"
+            >Save&nbsp;&verbar;&nbsp;Submit</a
+          >
+        </div>
+      </nav>
+
+      <!-- Overlay effect when opening sidebar on small screens -->
+      <div
+        class="w3-overlay w3-hide-large"
+        onclick="w3_close()"
+        style="cursor: pointer"
+        title="close side menu"
+        id="myOverlay"
+      ></div>
+
+      <!-- !PAGE CONTENT! -->
+      <div class="w3-main" style="margin-left: 22%">
+        <div class="w3-container" style="margin-top: 80px" id="E">
+          <div class="row justify-content-center">
+            <div class="col-md-11">
+              <div class="content">
+                <div
+                  class="w3-container"
+                  style="padding-top: 5%; padding-bottom: 20%"
+                >
+                  <!--Section ABCD+F in One big form-->
+                  <!--Section ABCD+F in One big form  -->
+                  <!--Section ABCD+F in One big form  -->
+                  <form
+                    action="/supervisor/rate_student/{{student_id}}/{{report_id}}"
+                    method="POST"
+                    id="Section_E"
+                    novalidate
+                  >
+                    <!-- Header -->
+                    <h1>PhD Student 6-Month Report Form</h1>
+                    <h6>End date: {{ period_ending }}</h6>
+                    <hr />
+                    <!-- flash message here -->
+                    {% with messages =
+                    get_flashed_messages(with_categories=true) %} {% if messages
+                    %} {% for category, message in messages %} {% if category
+                    =="success" %}
+                    <div
+                      class="alert alert-success alert-dismissible fade show"
+                      role="alert"
+                    >
+                      {{ message }}
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+
+                    {% elif category == "warning" %}
+                    <div
+                      class="alert alert-warning alert-dismissible fade show"
+                      role="alert"
+                    >
+                      {{ message }}
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+
+                    {% endif %} {% endfor %} {% endif %} {% endwith %}
+                    <!-- end flash message-->
+                    <!-- Section E -->
+                    <div class="w3-container" id="E">
+                      <h2 class="w3-Xlarge text-dark pt-5">
+                        Section E - Assessment of Student by Supervisor(s)
+                      </h2>
+                      <hr
+                        style="width: 50px; border: 5px solid"
+                        class="w3-round"
+                      />
+                      <p>
+                        This form will remain confidential to the Supervisor(s),
+                        Student, Faculty Postgraduate Administrator/ Chairperson
+                        and Faculty Dean (or nominee). Note that external
+                        supervisors/advisors/Tuakana are required to complete
+                        this assessment form where the student is working
+                        primarily offsite.<br /><br />Supervisors are required
+                        to use this form to comment on students at six-monthly
+                        intervals, but this form may be used at any time if
+                        problems arise. Students will subsequently receive a
+                        copy of these forms with supervisors’ comments on them.
+                        If the student is unhappy with these comments they can
+                        approach the Faculty Postgraduate Chairperson (or the LU
+                        Postgraduate Director, see page 1) to discuss the issue.
+                        If the student’s progress is unsatisfactory in a major
+                        way, without prospects of resolution, further action may
+                        be taken (see the PhD House Rules).
+                      </p>
+
+                      <!-- Section E Content section -->
+                      <div>
+                        <p class="h5">Student</p>
+                        <hr />
+                        <div class="row g-3">
+                          <div class="col-md-6">
+                            <label for="studentname" class="form-label"
+                              >Name</label
+                            >
+
+                            <input
+                              type="text"
+                              id="studentname"
+                              name="studentname"
+                              class="form-control"
+                              disabled
+                              value="{{student_info['FirstName']}}&nbsp;{{student_info['LastName']}}"
+                            />
+                          </div>
+
+                          <div class="col-md-6">
+                            <label for="studentid" class="form-label"
+                              >Student ID</label
+                            >
+
+                            <input
+                              type="number"
+                              id="studentid"
+                              name="studentid"
+                              class="form-control"
+                              disabled
+                              value="{{student_info['StudentID']}}"
+                            />
+                          </div>
+                        </div>
+                        <br />
+                        <p class="h5">Supervisor</p>
+                        <hr />
+                        <div class="row g-3">
+                          <div class="col-md-6">
+                            <label for="supervisor_name" class="form-label"
+                              >Name</label
+                            >
+                            <input
+                              type="text"
+                              id="supervisor_name"
+                              name="supervisor_name"
+                              class="form-control"
+                              disabled
+                              value="{{supervisor_info['Name']}}"
+                            />
+                          </div>
+                          <div class="col-md-6">
+                            <label for="supervisor_type" class="form-label"
+                              >Supervisor Type</label
+                            >
+
+                            <input
+                              type="text"
+                              id="supervisor_type"
+                              name="supervisor_type"
+                              class="form-control"
+                              disabled
+                              value="{{supervisor_info['SupervisorType']}}"
+                            />
+                          </div>
+                        </div>
+                        <hr />
+                        <br />
+                        <p class="h5">
+                          Please rate the student’s performance in the areas
+                          named below by placing a tick in the appropriate
+                          boxes.
+                        </p>
+                        <br />
+                        <!--  -->
+                        <!-- Display E_Table Content -->
+                        {% for e in e_table %}
+                        <p>
+                          {{e['CriterionID']}}&period;&nbsp;{{e['Criterion']}}
+                        </p>
+                        {% for option in rating_options %} {% if option ==
+                        e['Result'] %}
+                        <div class="form-check form-check-inline">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            id=""
+                            name="assessment_criterion{{e['CriterionID']}}"
+                            value="{{option}}"
+                            checked
+                            required
+                          />
+                          <label class="form-check-label" for=""
+                            >{{option}}</label
+                          >
+                        </div>
+                        {% else %}
+                        <div class="form-check form-check-inline">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            id=""
+                            name="assessment_criterion{{e['CriterionID']}}"
+                            value="{{option}}"
+                            required
+                          />
+                          <label class="form-check-label" for=""
+                            >{{option}}</label
+                          >
+                        </div>
+                        {% endif %} {% endfor %}<br /><br />{% endfor %}
+                        <!-- Extra Question -->
+                        <p>
+                          6&period;&nbsp;If a progress review meeting has taken
+                          place in the period covered by this report, have any
+                          recommendations from that meeting been carried out?
+                        </p>
+                        {% if e_rest['E_IfRecomCarriedOut'] %} {% for option in
+                        e_irco_options %} {% if option ==
+                        e_rest['E_IfRecomCarriedOut'] %}
+                        <div class="form-check form-check-inline">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            id="{{option}}"
+                            name="if_recom_carried_out"
+                            value="{{option}}"
+                            checked
+                            required
+                          />
+                          <label class="form-check-label" for=""
+                            >{{option}}</label
+                          >
+                        </div>
+                        {% else %}
+                        <div class="form-check form-check-inline">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            id="{{option}}"
+                            name="if_recom_carried_out"
+                            value="{{option}}"
+                            required
+                          />
+                          <label class="form-check-label" for=""
+                            >{{option}}</label
+                          >
+                        </div>
+                        {% endif %} {% endfor %}
+                        <!-- if no existing data -->
+                        {% else %} {% for option in e_irco_options %}
+                        <div class="form-check form-check-inline">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            id="{{option}}"
+                            name="if_recom_carried_out"
+                            value="{{option}}"
+                            required
+                          />
+                          <label class="form-check-label" for=""
+                            >{{option}}</label
+                          >
+                        </div>
+                        {% endfor %}{% endif %}
+                        <!-- E_table Comments -->
+                        <br /><br />
+                        <div class="form-group">
+                          <label for="e_comments">Comments</label>
+                          {% if e_rest['E_Comments'] == None %}
+                          <textarea
+                            class="form-control"
+                            id=""
+                            name="e_comments"
+                            rows="3"
+                            required
+                          ></textarea>
+                          {% else %}
+                          <textarea
+                            class="form-control"
+                            id=""
+                            name="e_comments"
+                            rows="3"
+                            required
+                          >
+{{e_rest['E_Comments']}}</textarea
+                          >
+                        </div>
+                        {% endif %}<br />
+                        <!--  -->
+                      </div>
+
+                      <!-- Form Save or Submit Section -->
+                      <!-- Form Save or Submit Section -->
+                      <!-- Form Save or Submit Section -->
+                    </div>
+                    <!-- Save or submit area -->
+                    <hr />
+                    {% if status != 'disabled' %}
+                    <div class="w3-container" id="S">
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        name="saveButton"
+                        onclick="saveForm()"
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="submit"
+                        class="btn btn-primary"
+                        name="submitButton"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                    {% endif %}
+                  </form>
+                  <!-- Section ABCD+F in One big form -->
+                  <!-- Section ABCD+F in One big form -->
+                  <!-- Section ABCD+F in One big form -->
+                  <!-- End page content -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        // Function to save the form without validation
+        function saveForm() {
+          var form = document.getElementById("Section_E");
+          form.action =
+            "/supervisor/rate_student/{{student_id}}/{{report_id}}?button=saveButton";
+          form.submit();
+        }
+        // Handle form submission and validation
+        document.getElementById("Section_E").addEventListener(
+          "submit",
+          function (event) {
+            var submitButton = document.querySelector(
+              'button[type="submit"]:focus'
+            );
+            if (submitButton && submitButton.name === "submitButton") {
+              // Submit button is clicked
+              var form = document.getElementById("Section_E");
+              form.action =
+                "/supervisor/rate_student/{{student_id}}/{{report_id}}?button=submitButton";
+            }
+
+            if (!this.checkValidity()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+
+            this.classList.add("was-validated");
+          },
+          false
+        );
+        // Script to open and close sidebar
+        function w3_open() {
+          document.getElementById("mySidebar").style.display = "block";
+          document.getElementById("myOverlay").style.display = "block";
+        }
+
+        function w3_close() {
+          document.getElementById("mySidebar").style.display = "none";
+          document.getElementById("myOverlay").style.display = "none";
+        }
+        // JavaScript code
+        function goBack() {
+          window.history.back();
+        }
+      </script>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <footer class="w3-center w3-black w3-padding-16">
+        <p>
+          Copyright © 2023 Lincoln University Postgraduate Monitoring System<br />All
+          rights reserved
+        </p>
+      </footer>
+    </div>
+    <!-- JavaScript Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </body>
+</html>

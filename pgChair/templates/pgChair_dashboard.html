@@ -1,0 +1,88 @@
+{% extends 'user_base.html' %} {% block title %}PG Chair Dashboard{% endblock %}
+{% block content %} {%if "dashboard" in request.path %}
+<div style="padding-top: 10%; padding-left: 10%">
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+    <div class="col-auto">
+      <a href="{{ url_for('pgChair.profile') }}">
+        <div
+          class="card"
+          style="width: 16rem; background-color: #005f73; color: #fff"
+        >
+          <div class="card-body">
+            <h1 class="card-title" style="text-align: center">
+              <span><i class="fas fa-user-tie"></i></span>
+            </h1>
+            <br />
+            <h5 class="card-subtitle mb-2" style="text-align: center">
+              My Profile
+            </h5>
+            <hr />
+            <p class="card-text">Manage my details.</p>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="col-auto">
+      <a href="{{ url_for('pgChair.pgchair_students') }}">
+        <div
+          class="card"
+          style="width: 16rem; background-color: #0a9396; color: #fff"
+        >
+          <div class="card-body">
+            <h1 class="card-title" style="text-align: center">
+              <span><i class="fas fa-users"></i></span>
+            </h1>
+            <br />
+            <h5 class="card-subtitle mb-2" style="text-align: center">
+              Students
+            </h5>
+            <hr />
+            <p class="card-text">Manage students in faculty.</p>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="col-auto">
+      <a href="{{ url_for('pgChair.pgchair_supervisor') }}">
+        <div
+          class="card"
+          style="width: 16rem; background-color: #ee9b00; color: #fff"
+        >
+          <div class="card-body">
+            <h1 class="card-title" style="text-align: center">
+              <span><i class="fas fa-users"></i></span>
+            </h1>
+            <br />
+            <h5 class="card-subtitle mb-2" style="text-align: center">
+              Supervisors
+            </h5>
+            <hr />
+            <p class="card-text">Manage all supervisors.</p>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-auto">
+      <a href="{{ url_for('pgChair.select_reporting_period') }}">
+        <div
+          class="card"
+          style="width: 16rem; background-color: #bc4749; color: #fff"
+        >
+          <div class="card-body">
+            <h1 class="card-title" style="text-align: center">
+              <span><i class="fas fa-eye"></i></span>
+            </h1>
+            <br />
+            <h5 class="card-subtitle mb-2" style="text-align: center">
+              My Reports
+            </h5>
+            <hr />
+            <p class="card-text">View all my reports.</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+{%else%} {%endif%}{% endblock %}

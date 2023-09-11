@@ -1,0 +1,81 @@
+{% extends 'user_base.html' %} {% block title %}My Reports{% endblock %} {%
+block content %}
+<div>
+  <div>
+    <h1>My Reports</h1>
+    <hr />
+  </div>
+  {% if reports %}
+  <div>
+    <table class="table">
+      <thead class="table table-secondary table-hover table-striped">
+        <tr>
+          <th scope="col">Report ID</th>
+          <th scope="col">Report Order</th>
+          <th scope="col">Reporting Period End Date</th>
+          <th scope="col">Status</th>
+          <th scope="col">Section F</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for report in reports %}
+        <tr>
+          <td>{{report['ReportID']}}</td>
+          <td>{{report['B_ReportOrder']}}</td>
+          <td>{{report['ReportPeriodEndDate'].strftime('%d/%m/%Y')}}</td>
+          {% if report['Status'] == 'Performance rating pending' %}
+          <td>
+            <form
+              action="/pgChair/report_status_desc/{{report['ReportID']}}"
+              method="POST"
+            >
+              <button type="submit" class="report_status_button">
+                {{report['Status']}}<br />({{report['Percentage']}})
+              </button>
+            </form>
+          </td>
+          {% else %}
+          <td>
+            <form
+              action="/pgChair/report_status_desc/{{report['ReportID']}}"
+              method="POST"
+            >
+              <button type="submit" class="report_status_button">
+                {{report['Status']}}
+              </button>
+            </form>
+          </td>
+          {% endif %}
+          <td>{{report['Section F']}}</td>
+          {% if report['Status'] in ['Unfinished','Rejected'] %}
+          <td>
+            <a
+              class="btn btn-primary"
+              href="/student/report/{{report['StudentID']}}/{{report['ReportID']}}/edit"
+              >Edit</a
+            >
+          </td>
+          {% else %}
+          <td>
+            <a
+              class="btn btn-primary"
+              href="/student/my_reports/{{report['StudentID']}}/{{report['ReportID']}}"
+              target="_blank"
+              >View</a
+            >
+          </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div>
+    <p>You don't have any reports at the moment.</p>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

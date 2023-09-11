@@ -1,0 +1,88 @@
+{% extends 'user_base.html' %} {% block title %}Tracker{% endblock %} {% block
+content %}
+<div class="pgtracker_container">
+  <div class="container">
+    <div class="steps">
+      {%for procedure in all_procedures%}
+      <span class="circle"> {{procedure}} </span>
+      {%endfor%}
+      <div class="progress-bar">
+        <span class="indicator"></span>
+      </div>
+    </div>
+    <div class="steps">
+      <span>Submitted by Student</span>
+      <span>Accepted by Principal Supervisor</span>
+      <span>Performance rating (3 required)</span>
+      <span>Final rating</span>
+    </div>
+    <div class="spacer" style="height: 30px"></div>
+    <!-- Submit History display-->
+    <div class="card" style="width: 100%; font-size: 15px">
+      <div class="card-header">
+        <strong
+          >Current Report Status (Report ID:{{report_id}}):<span
+            style="color: blue"
+          >
+            {{current_status}}</span
+          ></strong
+        >
+      </div>
+      <div class="card-header">
+        <strong>Report Submission Record:</strong>
+      </div>
+      <ul class="list-group list-group-flush" style="font-size: 14px">
+        {%for histroy in submission_history %}
+        <li class="list-group-item">{{histroy}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <!-- Submit History display-->
+  </div>
+</div>
+<!-- javascript for progress bar-->
+<script>
+  //Dom elements(multiple)
+  const circles = document.querySelectorAll(".circle"),
+    //single element
+    progressBar = document.querySelector(".indicator"),
+    buttons = document.querySelectorAll(".progressButton");
+  const currentStep = {{submission_history_length }};
+  //function that updates the current step and updates the DOM
+  const updateSteps = (e) => {
+    // update the current steo based on the button clicked
+    //currentStep =
+    //e.target.id === "next_tracker" ? ++currentStep : --currentStep;
+    //console.log(currentStep);
+    // loop through all circles and add/remove 'active' class based on their index and current step
+    circles.forEach((circle, index) => {
+      //should look like this :circle.classList[add]("active");
+      circle.classList[`${index < currentStep ? "add" : "remove"}`]("active");
+      console.log("currentStep",currentStep,"index",index,)
+      if (index < currentStep -1 ) {
+        circle.style.background = "#4070f4";
+        circle.innerHTML = `<svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="25"
+      height="25"
+      fill="white"
+      class="bi bi-check"
+      viewBox="0 0 16 16"
+    >
+      <path
+        d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"
+      /></svg
+  >`;
+      } else {
+        circle.style.background = "#fff";
+        circle.innerHTML = `${index + 1}`;
+      }
+    });
+    //update progress bar width based on current step
+    progressBar.style.width = `${
+      ((currentStep - 1) / (circles.length - 1)) * 100
+    }%`;
+  };
+  updateSteps({{currentStep}})
+</script>
+{% endblock %}

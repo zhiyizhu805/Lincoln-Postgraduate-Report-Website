@@ -1,0 +1,49 @@
+<!--header photo-->
+{%if request.path == url_for("account.main") or request.path ==
+url_for("account.register")%}
+
+<header
+  class="w3-display-container w3-content w3-wide"
+  style="max-width: none"
+  id="home"
+>
+  <div
+    class="bgimg w3-display-container w3-animate-opacity w3-text-white"
+    style="
+      background-image: url('https://cdn.pixabay.com/photo/2017/08/06/22/01/books-2596809_1280.jpg');
+      background-position: top center;
+      background-repeat: no-repeat;
+    "
+  >
+    <div class="w3-display-topleft w3-padding-large w3-xlarge">Logo</div>
+    <div class="w3-display-middle">
+      <h1 class="w3-jumbo w3-animate-top">Lincoln Monitoring</h1>
+      <hr class="w3-border-grey" style="margin: auto; width: 40%" />
+      <p class="w3-large w3-center">
+        Streamline your progress with Lincoln University's Postgraduate
+        Monitoring System
+      </p>
+    </div>
+  </div>
+</header>
+<!--end header photo-->
+{%elif 'profile' in request.path %}
+<header
+  class="w3-display-container w3-content w3-wide"
+  style="max-width: 1500px"
+  id="home"
+>
+  <div
+    class="bgimg w3-display-container w3-animate-opacity w3-text-white"
+    style="
+      background-image: url('/account/static/img/myprofile.jpg');
+      min-height: 83%;
+    "
+  >
+    <div class="w3-display-topleft w3-padding-large w3-xlarge">Logo</div>
+    <div class="w3-display-middle" style="margin-top: 150px">
+      <h1 class="w3-jumbo w3-animate-top">My profile</h1>
+    </div>
+  </div>
+</header>
+{%endif%}

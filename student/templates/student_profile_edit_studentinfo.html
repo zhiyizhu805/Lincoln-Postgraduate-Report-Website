@@ -1,0 +1,187 @@
+{% extends 'user_base.html' %} {% block title %}Profile{% endblock %} {% block
+content %}
+<div>
+  <h1>Edit My Profile</h1>
+  <hr />
+</div>
+<div>
+  <h3>Student Information:</h3>
+  <br />
+  <form
+    action="/student/profile/edit/studentinfo/process"
+    method="POST"
+    class="myForm"
+  >
+    <div class="form-group row">
+      <label for="studentid" class="col-sm-3 col-form-label"
+        ><strong>Student ID:</strong></label
+      >
+      <div class="col-sm-9">
+        <input
+          type="number"
+          id="studentid"
+          name="studentid"
+          class="form-control"
+          readonly
+          value="{{ student['StudentID'] }}"
+        />
+      </div>
+    </div>
+    <br />
+
+    <div class="form-group row">
+      <label for="studentname" class="col-sm-3 col-form-label"
+        ><strong>Student Name:</strong></label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          id="studentname"
+          name="studentname"
+          class="form-control"
+          readonly
+          value="{{ student['Student Name'] }}"
+        />
+      </div>
+    </div>
+    <br />
+
+    <div class="form-group row">
+      <label for="enrolmentdate" class="col-sm-3 col-form-label"
+        ><strong>Enrolment Date:</strong></label
+      >
+      <div class="col-sm-9">
+        <input
+          type="date"
+          id="enrolmentdate"
+          name="enrolmentdate"
+          class="form-control"
+          readonly
+          value="{{ student['EnrolmentDate'] }}"
+        />
+      </div>
+    </div>
+    <br />
+
+    <div class="form-group row">
+      <label for="address" class="col-sm-3 col-form-label"
+        ><strong>Address:</strong></label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          id="address"
+          name="address"
+          class="form-control"
+          pattern="^[^#@$%^]+$"
+          required
+          title="Please enter a valid address (special characters not allowed)"
+          value="{{ student['Address'] }}"
+        />
+        <div class="invalid-feedback">
+          Please enter a valid address (special characters not allowed).
+        </div>
+      </div>
+    </div>
+    <br />
+
+    <div class="form-group row">
+      <label for="phone" class="col-sm-3 col-form-label"
+        ><strong>Phone:</strong></label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          id="phone"
+          name="phone"
+          class="form-control"
+          required
+          minlength="7"
+          maxlength="14"
+          pattern="[0-9]+"
+          title="A valid phone number between 7 to 14 digits."
+          value="{{ student['Phone'] }}"
+        />
+        <div class="invalid-feedback">
+          A valid phone number between 7 to 14 digits.
+        </div>
+      </div>
+    </div>
+    <br />
+
+    <div class="form-group row">
+      <label for="email" class="col-sm-3 col-form-label"
+        ><strong>Email:</strong></label
+      >
+      <div class="col-sm-9">
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          readonly
+          value="{{ student['Email'] }}"
+        />
+      </div>
+    </div>
+    <br />
+
+    <div class="form-group row">
+      <label for="modeofstudy" class="col-sm-3 col-form-label"
+        ><strong>Mode Of Study:</strong></label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          id="modeofstudy"
+          name="modeofstudy"
+          class="form-control"
+          readonly
+          value="{{ student['ModeOfStudy'] }}"
+        />
+      </div>
+    </div>
+    <br />
+
+    <div class="form-group row">
+      <label for="thesistitle" class="col-sm-3 col-form-label"
+        ><strong>Thesis Title:</strong></label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          id="thesistitle"
+          name="thesistitle"
+          class="form-control"
+          readonly
+          value="{{ student['ThesisTitle'] }}"
+        />
+      </div>
+    </div>
+    <br />
+
+    <div
+      class="form-group row align-center"
+      style="display: flex; justify-content: center"
+    >
+      <button
+        class="btn btn-primary mb-3 mr-2"
+        type="submit"
+        name="save"
+        style="width: 12%"
+        value=""
+      >
+        Save
+      </button>
+      <a
+        type="button"
+        class="btn btn-secondary mb-3"
+        style="width: 12%"
+        href="/student/profile"
+        >Cancel</a
+      >
+    </div>
+  </form>
+
+  {% endblock %}
+</div>

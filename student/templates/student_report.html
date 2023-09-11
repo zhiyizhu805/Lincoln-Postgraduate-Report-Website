@@ -1,0 +1,1952 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>6MR Report - Lincoln Monitoring</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='/css/dashboard.css') }}"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+      integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
+    <!-- styling for dynamic input fields -->
+    <style>
+      .plus-minus {
+        font-size: 24px;
+        color: #666;
+        cursor: pointer;
+      }
+      .plus-minus:hover {
+        color: #000;
+      }
+      .plus-minus.add:before {
+        content: "+";
+      }
+      .plus-minus.delete:before {
+        content: "-";
+      }
+    </style>
+  </head>
+  <body style="background-color: white">
+    <!-- Navbar (sit on top) -->
+    <div class="w3-top">
+      <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+        <a href="/" class="w3-bar-item w3-button"><b>Lincoln </b> Monitoring</a>
+        <!-- Float links to the right. Hide them on small screens -->
+        <div class="w3 w3-hide-small">
+          <p class="w3-bar-item">Hi {{ session['first_name']|title }}!</p>
+        </div>
+        <div class="w3-right w3-hide-small">
+          <a
+            href="{{ url_for('account.logout') }}"
+            class="w3-bar-item w3-button"
+            >Log Out</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <!-- User's Universal Sidebar/menu -->
+      <nav
+        class="w3-sidebar w3-blue w3-collapse w3-top w3-large w3-padding"
+        style="z-index: 3; width: 300px; font-weight: bold"
+        id="mySidebar"
+      >
+        <br />
+        <a
+          href="javascript:void(0)"
+          onclick="w3_close()"
+          class="w3-button w3-hide-large w3-display-topleft"
+          style="width: 100%; font-size: 22px"
+          >Close Menu</a
+        >
+        <div class="w3-container">
+          <h3 class="w3-padding-64">
+            <b>6 Month Report</b>
+          </h3>
+        </div>
+        <div class="w3-bar-block">
+          <a
+            href="{{ url_for('student.dashboard') }}"
+            onclick="w3_close()"
+            class="w3-bar-item w3-button w3-hover-white"
+            >Dashboard</a
+          >
+          <hr />
+          <a
+            href="#A"
+            onclick="w3_close()"
+            class="w3-bar-item w3-button w3-hover-white"
+            >Section A</a
+          >
+          <a
+            href="#B"
+            onclick="w3_close()"
+            class="w3-bar-item w3-button w3-hover-white"
+            >Section B</a
+          >
+          <a
+            href="#C"
+            onclick="w3_close()"
+            class="w3-bar-item w3-button w3-hover-white"
+            >Section C</a
+          >
+
+          <a
+            href="#D"
+            onclick="w3_close()"
+            class="w3-bar-item w3-button w3-hover-white"
+            >Section D</a
+          >
+          <!--Set Section E invisible to students. -->
+          {% if session['role'] != 'Student' %}
+          <a
+            href="#E"
+            onclick="w3_close()"
+            class="w3-bar-item w3-button w3-hover-white"
+            >Section E</a
+          >{% endif %}
+          <!-- Set Section F visible only to Students and PG Chair -->
+          {% if session['role'] == 'Student' or session['role'] == 'PG Chair' %}
+          <a
+            href="#F"
+            onclick="w3_close()"
+            class="w3-bar-item w3-button w3-hover-white"
+            >Section F</a
+          >{% endif %} {% if status != 'disabled' %}
+          <hr />
+          <a
+            href="#S"
+            onclick="w3_close()"
+            class="w3-bar-item w3-button w3-hover-white"
+            >Save&nbsp;&verbar;&nbsp;Submit</a
+          >{%endif%}
+        </div>
+      </nav>
+
+      <!-- Overlay effect when opening sidebar on small screens -->
+      <div
+        class="w3-overlay w3-hide-large"
+        onclick="w3_close()"
+        style="cursor: pointer"
+        title="close side menu"
+        id="myOverlay"
+      ></div>
+
+      <!-- !PAGE CONTENT! -->
+      <div class="w3-main" style="margin-left: 22%">
+        <div class="w3-container" style="margin-top: 80px" id="A">
+          <div class="row justify-content-center">
+            <div class="col-md-11">
+              <div class="content">
+                <div
+                  class="w3-container"
+                  style="padding-top: 5%; padding-bottom: 20%"
+                >
+                  <!--Section ABCD+F in One big form-->
+                  <!--Section ABCD+F in One big form  -->
+                  <!--Section ABCD+F in One big form  -->
+                  <form
+                    action="/student/report/{{student_id}}/{{report_id}}/edit"
+                    method="POST"
+                    id="SixMRForm"
+                    novalidate
+                  >
+                    <!-- Header -->
+                    <h1>PhD Student 6-Month Report Form</h1>
+                    <h6>
+                      Reporting Period End Date: {{
+                      period_ending.strftime('%d/%m/%Y') }}
+                    </h6>
+                    <hr />
+                    <!-- flash message here -->
+                    {% with messages =
+                    get_flashed_messages(with_categories=true) %} {% if messages
+                    %} {% for category, message in messages %} {% if category
+                    =="success" %}
+                    <div
+                      class="alert alert-success alert-dismissible fade show"
+                      role="alert"
+                    >
+                      {{ message }}
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+
+                    {% elif category == "warning" %}
+                    <div
+                      class="alert alert-warning alert-dismissible fade show"
+                      role="alert"
+                    >
+                      {{ message }}
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+
+                    {% endif %} {% endfor %} {% endif %} {% endwith %}
+                    <!-- end flash message-->
+                    <!-- Section A -->
+                    <div class="w3-container" id="A">
+                      <h2 class="w3-Xlarge text-dark pt-5">
+                        Section A - Student Record
+                      </h2>
+                      <hr
+                        style="width: 50px; border: 5px solid"
+                        class="w3-round"
+                      />
+                      <!-- Student Record Content -->
+                      <div>
+                        <p class="h5">Profile</p>
+                        <hr />
+                        <div class="row g-3">
+                          <div class="col-md-6">
+                            <label for="studentname" class="form-label"
+                              >Name</label
+                            >
+
+                            <input
+                              type="text"
+                              id="studentname"
+                              name="studentname"
+                              class="form-control"
+                              disabled
+                              value="{{student_profile['FirstName']}}&nbsp;{{student_profile['LastName']}}"
+                            />
+                          </div>
+
+                          <div class="col-md-6">
+                            <label for="studentid" class="form-label"
+                              >Student ID</label
+                            >
+
+                            <input
+                              type="number"
+                              id="studentid"
+                              name="studentid"
+                              class="form-control"
+                              disabled
+                              value="{{student_profile['StudentID']}}"
+                            />
+                          </div>
+                          <div class="col-md-6">
+                            <label for="enrolmentdate" class="form-label"
+                              >Enrolment Date</label
+                            >
+
+                            <input
+                              type="date"
+                              id="enrolmentdate"
+                              name="enrolmentdate"
+                              class="form-control"
+                              disabled
+                              value="{{student_profile['EnrolmentDate']}}"
+                            />
+                          </div>
+                          <div class="col-md-6">
+                            <label for="modeofstudy" class="form-label"
+                              >Mode Of Study</label
+                            >
+
+                            <select
+                              type="text"
+                              id="modeofstudy"
+                              name="modeofstudy"
+                              class="form-control"
+                              disabled
+                            >
+                              {% for mode in ['Full-time','Part-time']%} {% if
+                              mode == student_profile['ModeOfStudy'] %}
+                              <option value="{{mode}}" selected>
+                                {{mode}}
+                              </option>
+                              {% else %}
+                              <option value="{{mode}}">{{mode}}</option>
+                              {% endif %} {% endfor %}
+                            </select>
+                          </div>
+                          <div class="col-md-6">
+                            <label for="phone" class="form-label">Phone</label>
+
+                            <input
+                              type="text"
+                              id="phone"
+                              name="phone"
+                              class="form-control"
+                              value="{{student_profile['Phone']}}"
+                              required
+                              {{status}}
+                            />
+                          </div>
+                          <div class="col-md-6">
+                            <label for="email" class="form-label">Email</label>
+
+                            <input
+                              type="email"
+                              id="email"
+                              name="email"
+                              class="form-control"
+                              disabled
+                              value="{{student_profile['Email']}}"
+                              required
+                            />
+                          </div>
+
+                          <div class="col-12">
+                            <label for="address" class="form-label"
+                              >Current Address</label
+                            >
+
+                            <input
+                              type="text"
+                              id="address"
+                              name="address"
+                              class="form-control"
+                              value="{{student_profile['Address']}}"
+                              required
+                              {{status}}
+                            />
+                          </div>
+                          <div class="col-12">
+                            <label for="thesistitle" class="form-label"
+                              >Thesis Title</label
+                            >
+                            <textarea
+                              type="text"
+                              id="thesistitle"
+                              name="thesistitle"
+                              class="form-control"
+                              disabled
+                            >
+{{student_profile['ThesisTitle']}}
+                            </textarea>
+                          </div>
+                        </div>
+                      </div>
+                      <br />
+                      <p class="h5">Supervision Team</p>
+                      <hr />
+                      <div class="row g-3">
+                        {% for sup in supervisors %}
+                        <div class="col-md-4">
+                          <label for="supervisortype" class="form-label"
+                            >{{ sup['SupervisorType'] }}</label
+                          >
+                          <input
+                            type="text"
+                            id="supervisortype"
+                            name="supervisortype"
+                            class="form-control"
+                            disabled
+                            value="{{ sup['SupervisorName']}}"
+                          />
+                        </div>
+                        {% endfor %}
+                      </div>
+                      <div>
+                        {% if scholarships %} {% for sch in scholarships %}
+                        <br />
+                        <p class="h5">Scholarship</p>
+                        <hr />
+                        <div class="row g-3">
+                          <div class="col-md-6">
+                            <label for="scholarship_name" class="form-label"
+                              >Name</label
+                            >
+                            <input
+                              type="text"
+                              id="scholarship_name"
+                              name="scholarship_name"
+                              class="form-control"
+                              disabled
+                              value="{{sch['Name']}}"
+                            />
+                          </div>
+
+                          <div class="col-md-6">
+                            <label for="value" class="form-label">Value</label>
+                            <input
+                              type="number"
+                              id="value"
+                              name="value"
+                              class="form-control"
+                              disabled
+                              value="{{sch['Value']}}"
+                            />
+                          </div>
+
+                          <div class="col-md-6">
+                            <label for="start_date" class="form-label"
+                              >Start Date</label
+                            >
+                            <input
+                              type="date"
+                              id="start_date"
+                              name="start_date"
+                              class="form-control"
+                              disabled
+                              value="{{sch['StartDate']}}"
+                            />
+                          </div>
+                          <div class="col-md-6">
+                            <label for="end_date" class="form-label"
+                              >End Date</label
+                            >
+                            <input
+                              type="date"
+                              id="end_date"
+                              name="end_date"
+                              class="form-control"
+                              disabled
+                              value="{{ sch['EndDate'] }}"
+                            />
+                          </div>
+                        </div>
+                        {% endfor %} {% endif %}
+                        <br />
+                        {% if employment %} {% for em in employment %}
+                        <p class="h5">Current Employment</p>
+                        <hr />
+
+                        <div class="row g-3">
+                          <div class="col-md-6">
+                            <label for="employmenttype" class="form-label"
+                              >Employment Type</label
+                            >
+
+                            <input
+                              type="text"
+                              id="employmenttype"
+                              name="employmenttype"
+                              class="form-control"
+                              disabled
+                              value="{{ em['EmploymentType'] }}"
+                            />
+                          </div>
+                          <div class="col-md-6">
+                            <label for="supervisorname" class="form-label"
+                              >Supervisor Name</label
+                            >
+
+                            <input
+                              type="text"
+                              id="supervisorname"
+                              name="supervisorname"
+                              class="form-control"
+                              disabled
+                              value="{{ em['Name'] }}"
+                            />
+                          </div>
+
+                          <div class="col-md-6">
+                            <label for="weeklyhours" class="form-label"
+                              >Weekly Hours</label
+                            >
+
+                            <input
+                              type="number"
+                              id="weeklyhours"
+                              name="weeklyhours"
+                              class="form-control"
+                              disabled
+                              value="{{ em['WeeklyHours'] }}"
+                            />
+                          </div>
+                          <div class="col-md-6">
+                            <label for="em_start_date" class="form-label"
+                              >Start Date</label
+                            >
+
+                            <input
+                              type="date"
+                              id="em_start_date"
+                              name="em_start_date"
+                              class="form-control"
+                              disabled
+                              value="{{ em['StartDate'] }}"
+                            />
+                          </div>
+                          <div class="col-md-6">
+                            <label
+                              for="em_end_date"
+                              class="form-label"
+                              style="display: none"
+                              >End Date</label
+                            >
+
+                            <input
+                              type="date"
+                              id="em_start_date"
+                              name="em_start_date"
+                              class="form-control"
+                              readonly
+                              style="display: none"
+                              value="{{ em['EndDate'] }}"
+                            />
+                          </div>
+                          <hr />
+                          {% endfor %} {% endif %}
+                        </div>
+                      </div>
+                      <!-- End of Student Record Content -->
+                    </div>
+
+                    <!--  Section B -->
+                    <div class="w3-container" id="B">
+                      <h2 class="w3-Xlarge text-dark pt-5 mt-5">
+                        Section B - Milestones
+                      </h2>
+                      <hr
+                        style="width: 50px; border: 5px solid"
+                        class="w3-round"
+                      />
+                      <!-- Section B Table Content -->
+                      <p class="h5">
+                        Please answer if the following milestones are completed
+                        and give a date of completion where appropriate.
+                      </p>
+                      <br />
+                      <!--  -->
+                      {% for b in b_table %}
+                      <p>
+                        {{ b['MilestoneID'] }}&period;&nbsp;{{
+                        b['MilestoneName'] }}
+                      </p>
+                      <div class="form-check form-check-inline">
+                        {% for option in b_options %} {% set radio_id = 'radio_'
+                        + b['MilestoneID']|string + '_' + loop.index|string %}
+                        {% set completion_id = 'completion_' +
+                        b['MilestoneID']|string + '_' + loop.index|string %} {%
+                        if option == b['IsCompleted'] %}
+                        <div class="form-check form-check-inline">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            id="{{ radio_id }}"
+                            name="milestone{{ b['MilestoneID'] }}"
+                            value="{{ option }}"
+                            checked
+                            required
+                            {{status}}
+                          />
+                          <label for="{{ radio_id }}" class="form-check-label"
+                            >{{ option }}</label
+                          >
+                        </div>
+                        {% else %}
+                        <div class="form-check form-check-inline">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            id="{{ radio_id }}"
+                            name="milestone{{ b['MilestoneID'] }}"
+                            value="{{ option }}"
+                            required
+                            {{status}}
+                          />
+                          <label for="{{ radio_id }}" class="form-check-label"
+                            >{{ option }}</label
+                          >
+                        </div>
+
+                        {% endif %} {% endfor %}
+                        <!-- Completion Date -->
+                        <div class="form-check form-check-inline">
+                          <input class="form-control" type="date" id="{{
+                          completion_id }}" name="completion_date{{
+                          b['MilestoneID'] }}" value="{{ b['CompletionDate'] }}"
+                          {% if b['IsCompleted'] != 'Yes' %} style="display:
+                          none;"{%endif%}{% if b['IsCompleted'] == 'Yes'
+                          %}required {% endif %}{{status}}/>
+                        </div>
+                      </div>
+                      <br /><br />
+                      {% endfor %}
+
+                      <!-- Additional JavaScript -->
+                      <script>
+                        {% for b in b_table %}
+                          // Get the radio buttons and completion date input element within this iteration
+                          const radioBtns{{ b['MilestoneID'] }} = document.querySelectorAll(
+                            'input[name="milestone{{ b["MilestoneID"] }}"]'
+                          );
+                          const completionDate{{ b['MilestoneID'] }} = document.querySelector(
+                            'input[name="completion_date{{ b["MilestoneID"] }}"]'
+                          );
+
+                          // Hide completion date by default if 'No' or not completed
+                          {% if b['IsCompleted'] != 'Yes' %}
+                            completionDate{{ b['MilestoneID'] }}.style.display = 'none';
+                          {% endif %}
+
+                          // Add event listeners to the radio buttons within this iteration
+                          radioBtns{{ b['MilestoneID'] }}.forEach((radio) => {
+                            radio.addEventListener('change', function () {
+                              const completionDate = document.querySelector(
+                                'input[name="completion_date{{ b["MilestoneID"] }}"]'
+                              );
+
+                              if (this.value === 'Yes') {
+                                completionDate.style.display = 'block';
+                              } else {
+                                completionDate.style.display = 'none';
+                              }
+                            });
+                          });
+                        {% endfor %}
+                      </script>
+
+                      <!--  -->
+                      <p class="h5">
+                        Discuss with your supervisor(s) whether or not your
+                        research has been or will need to be approved by any of
+                        the Lincoln University Committees listed below and
+                        select the appropriate options.
+                      </p>
+                      <br />
+                      <!-- section B Approval section -->
+                      {% for b in b_approval %}
+                      <p>
+                        {{b['ApproverID']}}&period;&nbsp;{{b['ApproverName']}}
+                      </p>
+                      {% for option in approval_options %} {% if option ==
+                      b['ApprovalStatus'] %}
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id=""
+                          name="approver{{b['ApproverID']}}"
+                          value="{{option}}"
+                          checked
+                          required
+                          {{status}}
+                        />
+                        <label class="form-check-label" for=""
+                          >{{option}}</label
+                        >
+                      </div>
+                      {% else %}
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id=""
+                          name="approver{{b['ApproverID']}}"
+                          value="{{option}}"
+                          required
+                          {{status}}
+                        />
+                        <label class="form-check-label" for=""
+                          >{{option}}</label
+                        >
+                      </div>
+                      {% endif %}{% endfor %} <br /><br />{% endfor %}
+                      <!-- section B Report Order section -->
+                      <p class="h5">
+                        Given that you are being managed to submit your PhD
+                        within 3 years of registering then please tick the
+                        appropriate reporting option below.
+                      </p>
+                      <br />
+                      {% for r in report_order_table %} {% if r['B_ReportOrder']
+                      == report_order %}
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="{{ r['B_ReportOrder'] }}"
+                          name="report_order"
+                          value="{{ r['B_ReportOrder'] }}"
+                          checked
+                          required
+                          {{status}}
+                        />
+                        <label
+                          class="form-check-label"
+                          for="{{ r['B_ReportOrder'] }}"
+                          >{{r['Description']}}</label
+                        >
+                      </div>
+
+                      {% else %}
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="{{ r['B_ReportOrder'] }}"
+                          name="report_order"
+                          value="{{ r['B_ReportOrder'] }}"
+                          required
+                          {{status}}
+                        />
+                        <label
+                          class="form-check-label"
+                          for="{{ r['B_ReportOrder'] }}"
+                          >{{r['Description']}}</label
+                        >
+                      </div>
+
+                      {% endif %} {% endfor %}
+                    </div>
+
+                    <!--  Section C -->
+                    <div class="w3-container" id="C">
+                      <h2 class="w3-Xlarge text-dark pt-5 mt-5">
+                        Section C - Evaluation of Faculty(or Centre) Performance
+                      </h2>
+                      <hr
+                        style="width: 50px; border: 5px solid"
+                        class="w3-round"
+                      />
+                      <p class="h5">
+                        Rate each of the following as they affect your study
+                        within the Faculty(or Centre). If you have any converns
+                        about undertaking this evaluation then please go
+                        directly to section D and then complete section F.
+                      </p>
+                      <br />
+                      <!-- Display C_Table Content -->
+                      {% for c in c_table %}
+                      <p>
+                        {{c['CriterionID']}}&period;&nbsp;{{c['Criterion']}}
+                      </p>
+                      {% for option in rating_options %} {% if option ==
+                      c['Result'] %}
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id=""
+                          name="evaluation_criterion{{c['CriterionID']}}"
+                          value="{{option}}"
+                          checked
+                          required
+                          {{status}}
+                        />
+                        <label class="form-check-label" for=""
+                          >{{option}}</label
+                        >
+                      </div>
+                      {% else %}
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id=""
+                          name="evaluation_criterion{{c['CriterionID']}}"
+                          value="{{option}}"
+                          required
+                          {{status}}
+                        />
+                        <label class="form-check-label" for=""
+                          >{{option}}</label
+                        >
+                      </div>
+                      {% endif %} {% endfor %}
+                      <!-- C_table Comments -->
+                      <br /><br />
+                      <div class="form-group">
+                        <label for="{{c['CriterionID']}}"
+                          >Comments(optional)</label
+                        >
+                        {% if c['Comments'] == None %}
+                        <textarea
+                          class="form-control"
+                          id=""
+                          name="ec_comment{{c['CriterionID']}}"
+                          rows="3"
+                          {{status}}
+                        ></textarea>
+                        {% else %}
+                        <textarea
+                          class="form-control"
+                          id=""
+                          name="ec_comment{{c['CriterionID']}}"
+                          rows="3"
+                          {{status}}
+                        >
+{{c['Comments']}}</textarea
+                        >
+                      </div>
+                      {% endif %}<br />{% endfor %}
+                      <div>
+                        <div>
+                          <!-- C meeting frequency-->
+                          <p>
+                            21. How frequently do you have a meeting with your
+                            supervisor?
+                          </p>
+                          {% for option in fqc_options %} {% if option ==
+                          frequency %}
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              id="{{option}}"
+                              name="meeting_frequency"
+                              value="{{option}}"
+                              checked
+                              required
+                              {{status}}
+                            />
+                            <label class="form-check-label" for="{{option}}"
+                              >{{option}}</label
+                            >
+                          </div>
+
+                          {% else %}
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              id="{{option}}"
+                              name="meeting_frequency"
+                              value="{{option}}"
+                              required
+                              {{status}}
+                            />
+                            <label class="form-check-label" for="{{option}}"
+                              >{{option}}</label
+                            >
+                          </div>
+
+                          {% endif %} {% endfor %}
+
+                          <br /><br />
+                          <!-- Feedback period -->
+                          <p>
+                            22. What is the usual period for receiving feedback
+                            from your supervisor on submitted materials?
+                          </p>
+                          {% for option in fb_options %} {% if option ==
+                          feedback_period %}
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              id="{{option}}"
+                              name="feedback_period"
+                              value="{{option}}"
+                              checked
+                              required
+                              {{status}}
+                            />
+                            <label for="{{option}}" class="form-check-label"
+                              >{{option}}</label
+                            >
+                          </div>
+                          {% else %}
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              id="{{option}}"
+                              name="feedback_period"
+                              value="{{option}}"
+                              required
+                              {{status}}
+                            />
+                            <label for="{{option}}" class="form-check-label"
+                              >{{option}}</label
+                            >
+                          </div>
+                          {% endif %} {% endfor %}
+                          <!-- Feedback channel -->
+                          <br /><br />
+                          <p>
+                            23. How do you receive your feedback from your
+                            supervisor? (Tick more than one box if appropriate)
+                          </p>
+                          {% for c in c_feedback_channel_data %} {% if
+                          c['IsSelected'] == 'Yes' %}
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              id="{{ c['FeedbackChannelID'] }}"
+                              name="feedback_channel{{ c['FeedbackChannelID'] }}"
+                              value="Yes"
+                              checked
+                              {{status}}
+                            />
+                            <label
+                              for="{{ c['FeedbackChannelID'] }}"
+                              class="form-check-label"
+                              >{{c['FeedbackChannel']}}</label
+                            >
+                          </div>
+
+                          {% else %}
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              id="{{ c['FeedbackChannelID'] }}"
+                              name="feedback_channel{{ c['FeedbackChannelID'] }}"
+                              value="Yes"
+                              {{status}}
+                            />
+                            <label
+                              for="{{ c['FeedbackChannelID'] }}"
+                              class="form-check-label"
+                              >{{c['FeedbackChannel']}}</label
+                            >
+                          </div>
+                          {% endif %} {% endfor %} <br /><br />
+                          <p>
+                            <em
+                              >&ast;Please make sure all questions in Section A,
+                              B and C are completed before you meet your
+                              supervisor and Associate Supervisor to complete
+                              Section D.</em
+                            >
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!--  Section D -->
+                    <div class="w3-container" id="D">
+                      <h2 class="w3-Xlarge text-dark pt-5 mt-5">
+                        Section D - Progress and Achievements
+                      </h2>
+                      <hr
+                        style="width: 50px; border: 5px solid"
+                        class="w3-round"
+                      />
+                      <p>
+                        <em>&ast;Assessment by student and supervisors</em
+                        ><br />This is an assessment of your progress and will
+                        be included in your postgraduate record. It is intended
+                        primarily to assist you to plan and carry out your
+                        study. The assessment is a documented record of your
+                        study and will illustrate your ability to define and
+                        achieve objectives.<br />
+                        Complete this after discussing it with your supervisor.
+                      </p>
+                      <p class="h6">
+                        Ensure you note and address any deviations from the
+                        standard 3-year PhD timeline. Add additional rows to
+                        these tables as necessary.
+                      </p>
+                      <br />
+                      <p class="h5">
+                        1. Report on your Research Objectives for the last Six
+                        Months
+                      </p>
+                      <br />
+                      <!-- D1 auto incremental row -->
+                      <table id="d1Table" class="table">
+                        <thead
+                          class="table table-secondary table-hover table-striped"
+                        >
+                          <tr>
+                            <th>
+                              Research Objectives<br /><small
+                                >(copy this from your last report form)</small
+                              >
+                            </th>
+                            <th>
+                              Status<br /><small>complete or incomplete</small>
+                            </th>
+                            <th>
+                              Comments<br /><small
+                                >Explain, where relevant, why particular
+                                activities are not completed</small
+                              >
+                            </th>
+                            <th>Add/Delete</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for d in d1_data %}
+                          <tr>
+                            <td>
+                              <input
+                                type="text"
+                                class="form-control"
+                                value="{{d['ResearchObjective']}}"
+                                name="d1_research_objectives[]"
+                                required
+                                {{status}}
+                              />
+                            </td>
+                            <td>
+                              <select
+                                name="d1_status[]"
+                                id=""
+                                class="form-control"
+                                required
+                                {{status}}
+                              >
+                                {% for option in status_options %} {% if option
+                                == d['Status'] %}
+                                <option
+                                  value="{{option}}"
+                                  name="d1_status[]"
+                                  selected
+                                >
+                                  {{option}}
+                                </option>
+                                {% else %}
+                                <option value="{{option}}" name="d1_status[]">
+                                  {{option}}
+                                </option>
+                                {% endif %} {% endfor %}
+                              </select>
+                            </td>
+                            <td>
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="d1_comments[]"
+                                value="{{d['Comments']}}"
+                                required
+                                {{status}}
+                              />
+                            </td>
+                            <td>
+                              <span
+                                class="plus-minus add"
+                                onclick="d1addRow()"
+                              ></span
+                              ><span
+                                class="plus-minus delete"
+                                onclick="d1deleteRow(this)"
+                              ></span>
+                            </td>
+                          </tr>
+                          {% else %}
+                          <tr>
+                            <td>
+                              <input
+                                type="text"
+                                class="form-control"
+                                value=""
+                                name="d1_research_objectives[]"
+                                required
+                                {{status}}
+                              />
+                            </td>
+                            <td>
+                              <select
+                                name="d1_status[]"
+                                id=""
+                                class="form-control"
+                                required
+                                {{status}}
+                              >
+                                {% for option in status_options %} {% if option
+                                == 'Select One' %}
+                                <option
+                                  value="{{option}}"
+                                  selected
+                                  name="d1_status[]"
+                                >
+                                  {{option}}
+                                </option>
+                                {% else %}
+                                <option value="{{option}}" name="d1_status[]">
+                                  {{option}}
+                                </option>
+                                {% endif %} {% endfor %}
+                              </select>
+                            </td>
+                            <td>
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="d1_comments[]"
+                                value=""
+                                required
+                                {{status}}
+                              />
+                            </td>
+                            <td>
+                              <span
+                                class="plus-minus add"
+                                onclick="d1addRow()"
+                              ></span
+                              ><span
+                                class="plus-minus delete"
+                                onclick="d1deleteRow(this)"
+                              ></span>
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                      <br />
+                      <!-- end of d1_table_part -->
+                      <p>
+                        Have any of these objectives changed or been modified
+                        since your proposal? If so, how, and why?
+                      </p>
+                      {% if d1_objective_change %}
+                      <textarea
+                        name="d1_objective_change"
+                        id=""
+                        class="form-control"
+                        rows="3"
+                        required
+                        {{status}}
+                      >
+{{d1_objective_change}}</textarea
+                      >
+                      {% else %}
+                      <textarea
+                        name="d1_objective_change"
+                        id=""
+                        class="form-control"
+                        rows="3"
+                        required
+                        {{status}}
+                      ></textarea>
+                      {% endif %}
+                      <br />
+                      <!-- D2 -->
+                      <p class="h5">
+                        2. Evaluation of effects of COVID-19 on research
+                        progress
+                      </p>
+                      <p>
+                        Detail any effects on your research plan of impacts such
+                        as travel restrictions, university closure including
+                        office or lab access, participant survey opportunities,
+                        financial hardship and social, emotional and mental
+                        well-being.
+                      </p>
+                      {% if d2_data %}
+                      <textarea
+                        name="d2_covid_effects"
+                        id=""
+                        class="form-control"
+                        rows="3"
+                        required
+                        {{status}}
+                      >
+{{d2_data}}</textarea
+                      >
+                      {% else %}
+                      <textarea
+                        name="d2_covid_effects"
+                        id=""
+                        class="form-control"
+                        rows="3"
+                        required
+                        {{status}}
+                      ></textarea>
+                      {% endif %}
+                      <br />
+                      <!-- D3 -->
+                      <p class="h5">
+                        3. Other Significant Academic Achievements in the last
+                        Six Months
+                      </p>
+                      <p>
+                        List other achievements including conference
+                        presentations, publications, workshops, posters etc.
+                      </p>
+                      {% if d3_data %}
+                      <textarea
+                        name="d3_academic_achievements"
+                        id=""
+                        class="form-control"
+                        rows="3"
+                        required
+                        {{status}}
+                      >
+{{d3_data}}</textarea
+                      >
+                      {% else %}
+                      <textarea
+                        name="d3_academic_achievements"
+                        id=""
+                        class="form-control"
+                        rows="3"
+                        required
+                        {{status}}
+                      ></textarea>
+                      {% endif %}
+                      <br />
+                      <!-- D4 -->
+                      <p class="h5">
+                        4. Research Objectives for the next six months
+                      </p>
+                      <br />
+                      <!-- D4 auto incremental row -->
+                      <table id="d4Table" class="table">
+                        <thead
+                          class="table table-secondary table-hover table-striped"
+                        >
+                          <tr>
+                            <th>
+                              Research Objectives<br /><small
+                                >(see your Research Proposal, which in most
+                                cases should have been prepared by now)</small
+                              >
+                            </th>
+                            <th>Target completion date</th>
+                            <th>
+                              Anticipated problems in achieving objectives
+                            </th>
+                            <th>Add/Delete</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for d in d4_data %}
+                          <tr>
+                            <td>
+                              <input
+                                type="text"
+                                class="form-control"
+                                value="{{d['Objective']}}"
+                                name="d4_objectives[]"
+                                required
+                                {{status}}
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="date"
+                                value="{{d['TargetCompletionDate']}}"
+                                class="form-control"
+                                name="d4_target_completion_date[]"
+                                required
+                                {{status}}
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="text"
+                                class="form-control"
+                                value="{{d['AnticipatedProblems']}}"
+                                name="d4_anticipated_problems[]"
+                                required
+                                {{status}}
+                              />
+                            </td>
+                            <td>
+                              <span
+                                class="plus-minus add"
+                                onclick="d4addRow()"
+                              ></span
+                              ><span
+                                class="plus-minus delete"
+                                onclick="d4deleteRow(this)"
+                              ></span>
+                            </td>
+                          </tr>
+                          {% else %}
+                          <tr>
+                            <td>
+                              <input
+                                type="text"
+                                class="form-control"
+                                value=""
+                                name="d4_objectives[]"
+                                required
+                                {{status}}
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="date"
+                                class="form-control"
+                                value=""
+                                name="d4_target_completion_date[]"
+                                required
+                                {{status}}
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="text"
+                                class="form-control"
+                                value=""
+                                name="d4_anticipated_problems[]"
+                                required
+                                {{status}}
+                              />
+                            </td>
+                            <td>
+                              <span
+                                class="plus-minus add"
+                                onclick="d4addRow()"
+                              ></span
+                              ><span
+                                class="plus-minus delete"
+                                onclick="d4deleteRow(this)"
+                              ></span>
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                      <br />
+                      <!-- D5 -->
+                      <p class="h5">
+                        5. Expected Research Expenditure for the next six months
+                      </p>
+                      <br />
+                      <!-- D5 auto incremental row -->
+                      <table id="d5Table" class="table">
+                        <thead
+                          class="table table-secondary table-hover table-striped"
+                        >
+                          <tr>
+                            <th>Item</th>
+                            <th>Amount</th>
+                            <th>Notes</th>
+                            <th>Add/Delete</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for d in d5_data %}
+                          <tr>
+                            <td>
+                              <input
+                                type="text"
+                                class="form-control"
+                                value="{{d['Item']}}"
+                                name="d5_items[]"
+                                required
+                                {{status}}
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="number"
+                                value="{{d['Amount']}}"
+                                class="form-control amount-input"
+                                name="d5_amount[]"
+                                required
+                                {{status}}
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="text"
+                                class="form-control"
+                                value="{{d['Notes']}}"
+                                name="d5_notes[]"
+                                required
+                                {{status}}
+                              />
+                            </td>
+                            <td>
+                              <span
+                                class="plus-minus add"
+                                onclick="d5addRow()"
+                              ></span
+                              ><span
+                                class="plus-minus delete"
+                                onclick="d5deleteRow(this)"
+                              ></span>
+                            </td>
+                          </tr>
+                          {% else %}
+                          <tr>
+                            <td>
+                              <input
+                                type="text"
+                                class="form-control"
+                                value=""
+                                name="d5_items[]"
+                                required
+                                {{status}}
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="number"
+                                class="form-control amount-input"
+                                value=""
+                                name="d5_amount[]"
+                                required
+                                {{status}}
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="text"
+                                class="form-control"
+                                value=""
+                                name="d5_notes[]"
+                                required
+                                {{status}}
+                              />
+                            </td>
+                            <td>
+                              <span
+                                class="plus-minus add"
+                                onclick="d5addRow()"
+                              ></span
+                              ><span
+                                class="plus-minus delete"
+                                onclick="d5deleteRow(this)"
+                              ></span>
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                      <br />
+                      <div class="form-check-inline">
+                        <label
+                          for="total_expenditure"
+                          class="form-label col-sm-6 h6"
+                          >Total Expenditure</label
+                        >
+                        <input
+                          id="total_expenditure"
+                          name="total_expenditure"
+                          type="text"
+                          class="form-control"
+                          required
+                          {{status}}
+                        />
+                      </div>
+
+                      <br />
+                      <!-- D5 comments -->
+                      <br /><br />
+                      <p>Comments:</p>
+                      {% if d5_comments %}
+                      <textarea
+                        name="d5_comments"
+                        id=""
+                        class="form-control"
+                        rows="3"
+                        required
+                        {{status}}
+                      >
+{{d5_comments}}</textarea
+                      >
+                      {% else %}
+                      <textarea
+                        name="d5_comments"
+                        id=""
+                        class="form-control"
+                        rows="3"
+                        required
+                        {{status}}
+                      ></textarea>
+                      {% endif %}
+                      <br />
+                    </div>
+                    <!-- Set Section F visible only to Students and PG Chair -->
+                    {% if session['role'] == 'Student' or session['role'] == 'PG
+                    Chair' %}
+                    <!--  Section F -->
+                    <div class="w3-container" id="F">
+                      <h2 class="w3-Xlarge text-dark pt-5 mt-5">
+                        Section F - Student Assessment of Supervision, Technical
+                        and Administrative Support
+                      </h2>
+                      <hr
+                        style="width: 50px; border: 5px solid"
+                        class="w3-round"
+                      />
+                      <br />
+                      <p>
+                        <em
+                          >&ast;This section is to be sent to the Faculty
+                          Postgraduate Chair. It can be used for positive and/or
+                          negative comments. <br /><br />
+                          It is very important that you identify and write down
+                          any concerns you have about your supervisor(s),
+                          technical or administrative staff even when you feel
+                          this may be inappropriate (e.g., for cultural
+                          reasons). You should not feel powerless to identify
+                          your concerns.
+                          <br /><br />
+                          Information on this form is confidential to the
+                          Faculty Postgraduate Chair and will not automatically
+                          be shown to your supervisors, technical or
+                          administrative staff. However, we are not allowed by
+                          law to withhold these forms from people mentioned in
+                          them should they request them. For this reason, you
+                          may prefer to discuss the problem(s) instead of/before
+                          committing to it. The best way to prevent small
+                          problems becoming big ones is to discuss the ‘Mutual
+                          Expectations Agreement’ document with your
+                          supervisor(s) as well as any incipient supervisor
+                          problems. If these routes fail, then the other options
+                          available to you are mentioned above.
+                          <br /><br />
+                          The Faculty Postgraduate Chair will contact you to
+                          discuss any issues if you tick the box at the bottom
+                          of this form. Through this discussion the most
+                          appropriate course of subsequent action will be
+                          discussed with you. Unlike the form itself, the
+                          details of these oral discussions will remain
+                          confidential.<br />
+                          <br />Always keep a copy of this form when completed,
+                          for your own record.</em
+                        >
+                      </p>
+                      <br />
+                      <!-- section f content -->
+                      <p class="h6">
+                        Would you like to fill out the Section F of the form?
+                      </p>
+                      {% if f_table %}
+                      <div class="form-check form-check-inline">
+                        <input
+                          type="radio"
+                          id="yesRadio"
+                          name="if_section_f"
+                          onclick="showForm()"
+                          class="form-check-input"
+                          checked
+                          value="Yes"
+                          required
+                          {{status}}
+                        />
+                        <label for="yesRadio" class="form-check-label"
+                          >Yes</label
+                        >
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input
+                          type="radio"
+                          id="noRadio"
+                          name="if_section_f"
+                          onclick="showForm()"
+                          class="form-check-input"
+                          value="No"
+                          required
+                          {{status}}
+                        />
+                        <label for="noRadio" class="form-check-label">No</label>
+                      </div>
+                      <!-- Section F hidden content -->
+                      <br /><br />
+                      <div id="myForm" class="form-container">
+                        <label for="reportedsupervisors" class="form-label"
+                          >Supervisor(s) Name(s)</label
+                        >
+                        <input type="text" id="reportedsupervisors"
+                        name="reportedsupervisors" class="form-control" {% if
+                        f_table['SupervisorNames'] == "None" or not
+                        f_table['SupervisorNames'] %} value="" {% else %}
+                        value="{{ f_table['SupervisorNames'] }}" {% endif %}
+                        required {{status}} />
+                        <br /><br />
+                        <label for="complaintcontent">Comments</label>
+                        <textarea
+                          class="form-control"
+                          id="complaintcontent"
+                          name="complaintcontent"
+                          rows="3"
+                          required
+                          {{status}}
+                        >
+{% if f_table['Comments']=="None" or not f_table['Comments'] %}{% else %}{{ f_table['Comments'] }}{% endif %}</textarea
+                        >
+                        <br /><br />
+                        <p>Who would you like to talk to?</p>
+                        {% if f_table['TalkTo'] == 'PG Chair' %}
+                        <div class="form-check form-check-inline">
+                          <input
+                            type="radio"
+                            id="op1"
+                            name="talkto"
+                            class="form-check-input"
+                            value="PG Chair"
+                            checked
+                            required
+                            {{status}}
+                          />
+                          <label for="op1" class="form-check-label"
+                            >Faculty Postgraduate Chair
+                          </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input
+                            type="radio"
+                            id="op2"
+                            name="talkto"
+                            class="form-check-input"
+                            value="Convenor"
+                            required
+                            {{status}}
+                          />
+                          <label for="noRadio" class="form-check-label"
+                            >Academic Administration Convenor</label
+                          >
+                        </div>
+                        {% else %}
+                        <div class="form-check form-check-inline">
+                          <input
+                            type="radio"
+                            id="op1"
+                            name="talkto"
+                            class="form-check-input"
+                            value="PG Chair"
+                            required
+                            {{status}}
+                          />
+                          <label for="op1" class="form-check-label"
+                            >Faculty Postgraduate Chair
+                          </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input
+                            type="radio"
+                            id="op2"
+                            name="talkto"
+                            class="form-check-input"
+                            value="Convenor"
+                            checked
+                            required
+                            {{status}}
+                          />
+                          <label for="noRadio" class="form-check-label"
+                            >Academic Administration Convenor</label
+                          >
+                        </div>
+                      </div>
+                      {% endif %} {% else %}
+                      <div class="form-check form-check-inline">
+                        <input
+                          type="radio"
+                          id="yesRadio"
+                          name="if_section_f"
+                          onclick="showForm()"
+                          class="form-check-input"
+                          value="Yes"
+                          required
+                          {{status}}
+                        />
+                        <label for="yesRadio" class="form-check-label"
+                          >Yes</label
+                        >
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input
+                          type="radio"
+                          id="noRadio"
+                          name="if_section_f"
+                          onclick="showForm()"
+                          class="form-check-input"
+                          checked
+                          value="No"
+                          required
+                          {{status}}
+                        />
+                        <label for="noRadio" class="form-check-label">No</label>
+                      </div>
+                      <!-- Section F hidden content -->
+                      <br /><br />
+                      <div
+                        id="myForm"
+                        class="form-container"
+                        style="display: none"
+                      >
+                        <label for="reportedsupervisors" class="form-label"
+                          >Supervisor(s) Name(s)</label
+                        >
+                        <input
+                          type="text"
+                          id="reportedsupervisors"
+                          name="reportedsupervisors"
+                          class="form-control"
+                          value=""
+                          {{status}}
+                        />
+                        <br /><br />
+                        <label for="complaintcontent">Comments</label>
+                        <textarea
+                          class="form-control"
+                          id="complaintcontent"
+                          name="complaintcontent"
+                          rows="3"
+                          {{status}}
+                        ></textarea>
+                        <br /><br />
+                        <p>Who would you like to talk to?</p>
+                        <div class="form-check form-check-inline">
+                          <input
+                            type="radio"
+                            id="op1"
+                            name="talkto"
+                            class="form-check-input"
+                            value="PG Chair"
+                            {{status}}
+                          />
+                          <label for="op1" class="form-check-label"
+                            >Faculty Postgraduate Chair
+                          </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input
+                            type="radio"
+                            id="op2"
+                            name="talkto"
+                            class="form-check-input"
+                            value="Convenor"
+                            {{status}}
+                          />
+                          <label for="noRadio" class="form-check-label"
+                            >Academic Administration Convenor</label
+                          >
+                        </div>
+                      </div>
+                      {% endif %} {% endif %}
+                      <br />
+
+                      <!-- Form Save or Submit Section -->
+                      <!-- Form Save or Submit Section -->
+                      <!-- Form Save or Submit Section -->
+                    </div>
+                    <!-- Save or submit area -->
+                    <hr />
+                    {% if status != 'disabled' %}
+                    <div class="w3-container" id="S">
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        name="saveButton"
+                        onclick="saveForm()"
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="submit"
+                        class="btn btn-primary"
+                        name="submitButton"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                    {% endif %}
+                  </form>
+                  <!-- Section ABCD+F in One big form -->
+                  <!-- Section ABCD+F in One big form -->
+                  <!-- Section ABCD+F in One big form -->
+                  <!-- End page content -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        // Add event listeners to amount inputs
+        var amountInputs = document.getElementsByClassName("amount-input");
+        for (var i = 0; i < amountInputs.length; i++) {
+          amountInputs[i].addEventListener("input", updateTotalExpenditure);
+        }
+        // Function to save the form without validation
+        function saveForm() {
+          var form = document.getElementById("SixMRForm");
+          form.action =
+            "/student/report/{{student_id}}/{{report_id}}/edit?button=saveButton";
+          form.submit();
+        }
+
+        // Handle form submission and validation
+        document.getElementById("SixMRForm").addEventListener(
+          "submit",
+          function (event) {
+            var submitButton = document.querySelector(
+              'button[type="submit"]:focus'
+            );
+            if (submitButton && submitButton.name === "submitButton") {
+              // Submit button is clicked
+              var form = document.getElementById("SixMRForm");
+              form.action =
+                "/student/report/{{student_id}}/{{report_id}}/edit?button=submitButton";
+            }
+
+            if (!this.checkValidity()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+
+            this.classList.add("was-validated");
+          },
+          false
+        );
+
+        // Script to open and close Section F.
+        function showForm() {
+          var form = document.getElementById("myForm");
+          if (document.getElementById("yesRadio").checked) {
+            form.style.display = "block"; // show the form if 'yes' radio button is checked
+          } else {
+            form.style.display = "none"; // hide the form if 'no' radio button is checked
+          }
+        }
+        // Script to add and delete rows D1 table.
+        function d1addRow() {
+          var table = document.getElementById("d1Table");
+          var row = table.insertRow();
+          var cell1 = row.insertCell(0);
+          var cell2 = row.insertCell(1);
+          var cell3 = row.insertCell(2);
+          var cell4 = row.insertCell(3);
+          cell1.innerHTML =
+            "<input type='text' class='form-control' name='d1_research_objectives[]' required>";
+          cell2.innerHTML =
+            "<select class='form-control' name='d1_status[]' required><option value='Completed'>Completed</option><option value='Incomplete'>Incomplete</option><option value='Select One' selected>Select One</option></select>";
+          cell3.innerHTML =
+            "<input type='text' class='form-control' name='d1_comments[]' required>";
+          cell4.innerHTML =
+            "<span class='plus-minus add' onclick='d1addRow()'></span><span class='plus-minus delete' onclick='d1deleteRow(this)'></span>";
+        }
+
+        function d1deleteRow(row) {
+          var i = row.parentNode.parentNode.rowIndex;
+          document.getElementById("d1Table").deleteRow(i);
+        }
+        // Script to add and delete rows D4 table.
+        function d4addRow() {
+          var table = document.getElementById("d4Table");
+          var row = table.insertRow();
+          var cell1 = row.insertCell(0);
+          var cell2 = row.insertCell(1);
+          var cell3 = row.insertCell(2);
+          var cell4 = row.insertCell(3);
+          cell1.innerHTML =
+            "<input type='text' class='form-control' name='d4_objectives[]' required>";
+          cell2.innerHTML =
+            "<input type='date' class='form-control' name='d4_target_completion_date[]' required>";
+          cell3.innerHTML =
+            "<input type='text' class='form-control' name='d4_anticipated_problems[]' required>";
+          cell4.innerHTML =
+            "<span class='plus-minus add' onclick='d4addRow()'></span><span class='plus-minus delete' onclick='d4deleteRow(this)'></span>";
+        }
+
+        function d4deleteRow(row) {
+          var i = row.parentNode.parentNode.rowIndex;
+          document.getElementById("d4Table").deleteRow(i);
+        }
+
+        // Script to add and delete rows D5 table and to update the amount in Total expenditure dynamically.
+        function d5addRow() {
+          var table = document.getElementById("d5Table");
+          var row = table.insertRow();
+          var cell1 = row.insertCell(0);
+          var cell2 = row.insertCell(1);
+          var cell3 = row.insertCell(2);
+          var cell4 = row.insertCell(3);
+          cell1.innerHTML =
+            "<input type='text' class='form-control' name='d5_items[]' required>";
+          cell2.innerHTML =
+            "<input type='number' class='form-control amount-input' name='d5_amount[]' required>";
+          cell3.innerHTML =
+            "<input type='text' class='form-control' name='d5_notes[]' required>";
+          cell4.innerHTML =
+            "<span class='plus-minus add' onclick='d5addRow()'></span><span class='plus-minus delete' onclick='d5deleteRow(this)'></span>";
+
+          // Add event listener to the newly added amount input
+          var amountInput = cell2.querySelector(".amount-input");
+          amountInput.addEventListener("input", updateTotalExpenditure);
+        }
+
+        function d5deleteRow(row) {
+          var i = row.parentNode.parentNode.rowIndex;
+          document.getElementById("d5Table").deleteRow(i);
+
+          // Recalculate the total expenditure after deleting a row
+          updateTotalExpenditure();
+        }
+
+        function updateTotalExpenditure() {
+          var amountInputs = document.getElementsByClassName("amount-input");
+          var total = 0;
+          for (var i = 0; i < amountInputs.length; i++) {
+            var amount = parseFloat(amountInputs[i].value);
+            if (!isNaN(amount)) {
+              total += amount;
+            }
+          }
+
+          var formattedTotal = "";
+          if (!isNaN(total) && total !== null) {
+            formattedTotal = "$" + total.toFixed(2) + " NZD";
+          }
+
+          document.getElementById("total_expenditure").value = formattedTotal;
+        }
+
+        // Calculate initial total when first loaded
+        window.addEventListener("load", function () {
+          updateTotalExpenditure();
+        });
+
+        // Add event listener to the initial amount inputs
+        var amountInputs = document.getElementsByClassName("amount-input");
+        for (var i = 0; i < amountInputs.length; i++) {
+          amountInputs[i].addEventListener("input", updateTotalExpenditure);
+        }
+
+        // Script to open and close sidebar
+        function w3_open() {
+          document.getElementById("mySidebar").style.display = "block";
+          document.getElementById("myOverlay").style.display = "block";
+        }
+
+        function w3_close() {
+          document.getElementById("mySidebar").style.display = "none";
+          document.getElementById("myOverlay").style.display = "none";
+        }
+
+        // Modal Image Gallery
+        function onClick(element) {
+          document.getElementById("img01").src = element.src;
+          document.getElementById("modal01").style.display = "block";
+          var captionText = document.getElementById("caption");
+          captionText.innerHTML = element.alt;
+        }
+      </script>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <footer class="w3-center w3-black w3-padding-16">
+        <p>
+          Copyright © 2023 Lincoln University Postgraduate Monitoring System<br />All
+          rights reserved
+        </p>
+      </footer>
+    </div>
+    <!-- JavaScript Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </body>
+</html>

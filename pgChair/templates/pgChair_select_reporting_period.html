@@ -1,0 +1,50 @@
+{% extends 'user_base.html' %} {% block title %}My Reports{% endblock %} {%
+block content %}
+<div class="container mt-5 pt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-body">
+          <p class="card-title text-center h4">Select A Reporting Period</p>
+          <hr />
+          {% with messages = get_flashed_messages() %} {% if messages %} {% for
+          message in messages %}
+          <div
+            class="alert alert-warning alert-dismissible fade show"
+            role="alert"
+          >
+            {{ message }}
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button
+            >{% endfor %}
+          </div>
+          {% endif %} {% endwith %}
+          <form action="/pgChair/select_reporting_period" method="POST">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+              {{ form.year.label(class="form-label") }} {{
+              form.year(class="form-control") }}
+            </div>
+            <div class="mb-3">
+              {{ form.period.label(class="form-label") }} {{
+              form.period(class="form-control") }}
+            </div>
+            <div class="d-grid">{{ form.submit(class="btn btn-primary") }}</div>
+            <div class="d-grid">
+              <a
+                href="{{ url_for('pgChair.dashboard') }}"
+                class="btn btn-secondary mt-2"
+                >Back</a
+              >
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

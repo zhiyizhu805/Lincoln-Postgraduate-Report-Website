@@ -1,0 +1,235 @@
+{% extends 'user_base.html' %} {% block title %}My Reports{% endblock %} {%
+block content %}
+<div>
+  <div>
+    <h1>My Reports</h1>
+    <hr />
+  </div>
+  <!-- flash message here -->
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %} {% for category, message in messages %} {% if category =="success"
+  %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+
+  {% elif category == "warning" %}
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+
+  {% endif %} {% endfor %} {% endif %} {% endwith %}
+  <!-- end flash message-->
+  <div>
+    {% if reports != [] %}
+    <table class="table">
+      <thead class="table table-secondary table-hover table-striped">
+        <tr>
+          <th scope="col">Report<br />ID</th>
+          <th scope="col">End<br />Date</th>
+          <th scope="col">Report<br />Order</th>
+          <th scope="col">Student<br />ID</th>
+          <th scope="col">Student<br />Name</th>
+          <th scope="col">Status</th>
+          <th scope="col">Section F</th>
+          <th scope="col" class="wider-column">Action</th>
+        </tr>
+      </thead>
+      {% for re in reports %}
+      <tbody>
+        {% if re['Status'] in ['Acceptance pending','Rejected'] and
+        re['IfSectionF']=='Yes' %}
+        <tr>
+          <td>{{re['Report ID']}}</td>
+          <td>{{re['End Date']}}</td>
+          <td>{{re['Report Order']}}</td>
+          <td>{{re['Student ID']}}</td>
+          <td>{{re['Student Name']}}</td>
+          <td>
+            <form
+              action="/pgChair/report_status_desc/{{re['Report ID']}}"
+              method="POST"
+            >
+              <button type="submit" class="report_status_button">
+                {{re['Status']}}
+              </button>
+            </form>
+          </td>
+          {% if re['HasResponded']==True %}
+          <td>Responded</td>
+          {% elif re['HasResponded']==False %}
+          <td>
+            <a
+              href="/pgChair/my_reports/respond_section_f/{{re['Report ID']}}"
+              type="button"
+              class="btn btn-warning"
+              >Respond</a
+            >
+          </td>
+          {% endif %}
+          <td class="wider-column">
+            <a
+              href="/supervisor/my_reports/{{re['Student ID']}}/{{re['Report ID']}}"
+              type="button"
+              class="btn btn-primary"
+              target="_blank"
+              >View</a
+            >
+          </td>
+        </tr>
+
+        {% endif %} {% if re['Status'] == 'Performance rating pending'%}
+        <tr>
+          <td>{{re['Report ID']}}</td>
+          <td>{{re['End Date']}}</td>
+          <td>{{re['Report Order']}}</td>
+          <td>{{re['Student ID']}}</td>
+          <td>{{re['Student Name']}}</td>
+          <td>
+            <form
+              action="/pgChair/report_status_desc/{{re['Report ID']}}"
+              method="POST"
+            >
+              <button type="submit" class="report_status_button">
+                {{re['Status']}}({{re['Percentage']}})
+              </button>
+            </form>
+          </td>
+          {% if re['IfSectionF']=='No' %}
+          <td>N/A</td>
+          {% elif re['IfSectionF']=='Yes' %} {% if re['HasResponded']==True %}
+          <td>Responded</td>
+          {% elif re['HasResponded']==False %}
+          <td>
+            <a
+              href="/pgChair/my_reports/respond_section_f/{{re['Report ID']}}"
+              type="button"
+              class="btn btn-warning"
+              >Respond</a
+            >
+          </td>
+          {% endif %} {% endif %}
+          <td class="wider-column">
+            <a
+              href="/supervisor/my_reports/{{re['Student ID']}}/{{re['Report ID']}}"
+              type="button"
+              class="btn btn-primary"
+              target="_blank"
+              >View</a
+            >
+          </td>
+        </tr>
+
+        {% endif %} {% if re['Status']=='Final rating pending' %}
+        <tr>
+          <td>{{re['Report ID']}}</td>
+          <td>{{re['End Date']}}</td>
+          <td>{{re['Report Order']}}</td>
+          <td>{{re['Student ID']}}</td>
+          <td>{{re['Student Name']}}</td>
+          <td>
+            <form
+              action="/pgChair/report_status_desc/{{re['Report ID']}}"
+              method="POST"
+            >
+              <button type="submit" class="report_status_button">
+                {{re['Status']}}
+              </button>
+            </form>
+          </td>
+          {% if re['IfSectionF']=='No' %}
+          <td>N/A</td>
+          {% elif re['IfSectionF']=='Yes' %} {% if re['HasResponded']==True %}
+          <td>Responded</td>
+          {% elif re['HasResponded']==False %}
+          <td>
+            <a
+              href="/pgChair/my_reports/respond_section_f/{{re['Report ID']}}"
+              type="button"
+              class="btn btn-warning"
+              >Respond</a
+            >
+          </td>
+          {% endif %} {% endif %}
+          <td class="wider-column">
+            <a
+              href="/supervisor/my_reports/{{re['Student ID']}}/{{re['Report ID']}}"
+              type="button"
+              class="btn btn-primary"
+              target="_blank"
+              >View</a
+            >
+            {% if re['PgChairToRate']==True %}
+            <a
+              href="/convenor/final_rating/{{re['Student ID']}}/{{re['Report ID']}}"
+              type="button"
+              class="btn btn-success"
+              >Rate</a
+            >{% endif %}
+          </td>
+        </tr>
+        {% endif %}{% if re['Status']=='Finalised' %}
+        <tr>
+          <td>{{re['Report ID']}}</td>
+          <td>{{re['End Date']}}</td>
+          <td>{{re['Report Order']}}</td>
+          <td>{{re['Student ID']}}</td>
+          <td>{{re['Student Name']}}</td>
+          <td>
+            <form
+              action="/pgChair/report_status_desc/{{re['Report ID']}}"
+              method="POST"
+            >
+              <button type="submit" class="report_status_button">
+                {{re['Status']}}
+              </button>
+            </form>
+          </td>
+          {% if re['IfSectionF']=='No' %}
+          <td>N/A</td>
+          {% elif re['IfSectionF']=='Yes' %} {% if re['HasResponded']==True %}
+          <td>Responded</td>
+          {% elif re['HasResponded']==False %}
+          <td>
+            <a
+              href="/pgChair/my_reports/respond_section_f/{{re['Report ID']}}"
+              type="button"
+              class="btn btn-warning"
+              >Respond</a
+            >
+          </td>
+          {% endif %} {% endif %}
+          <td class="wider-column">
+            <a
+              href="/supervisor/my_reports/{{re['Student ID']}}/{{re['Report ID']}}"
+              type="button"
+              class="btn btn-primary"
+              target="_blank"
+              >View</a
+            >
+          </td>
+        </tr>
+        {% endif %}
+      </tbody>
+      {% endfor %}
+    </table>
+    {% else %}
+
+    <p>You have no reports submitted to you for this reporting period.</p>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,406 @@
+<!-- JavaScript Bundle with Popper -->
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+  crossorigin="anonymous"
+></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+<script>
+  window.all_staff_name = "{{ all_staff_name }}";
+</script>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+<!-- show login / reset psw modal with flash message-->
+<script>
+    {% if show_login_modal %}
+    $(document).ready(function () {
+      $("#loginModal").modal("show");
+    });
+    {% elif show_register_modal %}
+    $(document).ready(function () {
+      $("#register_Modal").modal("show");
+    });
+    {% elif show_complete_profile_modal %}
+    $(document).ready(function () {
+      $("#completeProfileModal").modal("show");
+      console.log('right dshajd')
+    });
+  {% elif show_reset_password_modal %}
+    $(document).ready(function () {
+      $("#resetPasswordModal").modal("show");
+    });
+    {% endif %}
+</script>
+<!-- end show modal-->
+
+<!--script for register form employment multiple choice-->
+<script>
+    $("#remove-employment").hide();
+    let employments = {{ employments|default('[]')|tojson }};
+    let Index_employ = 0;
+    {% if employments %}
+    {% for employment in employments %}
+      Index_employ ++;
+      var employmentsInputsDisplay = `
+      <div class="form-row">
+        <div class="form-group col-md-4">
+        <label for="supervisorname${Index_employ}"
+          ><strong>- Supervisor Name ${Index_employ}:</strong></label
+        >
+          <select
+            id="supervisorname${Index_employ}"
+            name="supervisorname[${Index_employ}]"
+            class="form-control"
+            required
+          >
+
+          <option value="">-- Please Select --</option>
+          {%for staff_name in all_staff_name%}
+          <!-- select and show user input -->
+          <option value="{{staff_name['STAFFID']}}" {% if employment.supervisorname == staff_name['STAFFID'] %} selected {% endif %}>
+            {{staff_name['FIRSTNAME']}} {{staff_name['LASTNAME']}}
+          </option>
+          {% endfor %}
+          </select>
+          <div class="invalid-feedback">Please select the supervisor name.</div>
+        </div>
+
+
+        <div class="form-group col-md-4">
+        <label for="employmenttype${Index_employ}"
+          ><strong>Employment Type :</strong></label
+        >
+          <select
+            id="employmenttype${Index_employ}"
+            name="employmenttype[${Index_employ}]"
+            class="form-control"
+            required
+          >
+            <option value="2" {% if employment.employmenttype == "2" %} selected {% endif %}>Research</option>
+            <option value="1" {% if employment.employmenttype == "1" %} selected {% endif %}>Teaching</option>
+            <option value="3" {% if employment.employmenttype == "3" %} selected {% endif %}>Other</option>
+          </select>
+          <div class="invalid-feedback">Please select the Employment Type.</div>
+        </div>
+
+
+        <div class="form-group col-md-4">
+          <label for="weeklyhours${Index_employ}"
+            ><strong>Weekly Hours:</strong></label
+          >
+            <input
+              type="number"
+              id="weeklyhours${Index_employ}"
+              name="weeklyhours[${Index_employ}]"
+              class="form-control"
+              value="{{employment.weeklyhours}}"
+              required
+            />
+            <div class="invalid-feedback">Please enter the weekly hours.</div>
+          </div>
+
+          <div class="form-group col-md-2">
+            <label for="StartDate${Index_employ}"
+              ><strong>StartDate:</strong></label
+            >
+              <input
+                type="date"
+                id="StartDate${Index_employ}"
+                name="StartDate[${Index_employ}]"
+                class="form-control"
+                required
+                value="{{employment.StartDate}}"
+                />
+                <div class="invalid-feedback">Please select the employment start date.</div>
+              </div>
+
+            <div class="form-group col-md-2">
+              <label for="EndDate${Index_employ}"
+                ><strong>EndDate:</strong></label
+              >
+                <input
+                  type="date"
+                  id="EndDate${Index_employ}"
+                  name="EndDate[${Index_employ}]"
+                  class="form-control"
+                  {%if employment.EndDate != ''%}
+                  value="{{employment.EndDate}}"
+                  {%endif%}
+                  />
+                  <div class="invalid-feedback">Please select the employment end date.</div>
+                </div>
+              </div>
+
+
+  `
+            $("#employment-container").append(employmentsInputsDisplay)
+            {%endfor%};
+
+
+      //script for register form scholarship multiple choice
+      //$("#remove-scholarship").hide();
+      {%else%}Index_employ = 0;
+      {% endif %}
+
+      $("#remove-employment").hide();
+
+      $("#add-employment").on("click", function () {
+        Index_employ++;
+        $("#remove-employment").show();
+        if (Index_employ >=5){
+          $("#add-employment").hide();
+        }
+        let employmentInputs = `
+        <div class="form-row">
+          <div class="form-group col-md-3">
+          <label for="supervisorname${Index_employ}"
+            ><strong>Supervisor Name:</strong></label
+          >
+            <select
+              id="supervisorname${Index_employ}"
+              name="supervisorname[${Index_employ}]"
+              class="form-control"
+              required
+            >
+              <option value="">-- Please Select --</option>
+              {%for staff_name in all_staff_name%}
+              <option value="{{staff_name['StaffID']}}">
+                {{staff_name['FirstName']}} {{staff_name['LastName']}}
+              </option>
+              {%endfor%}
+            </select>
+            <div class="invalid-feedback">Please select the supervisor Name.</div>
+          </div>
+
+
+      <div class="form-group col-md-3">
+      <label for="employmenttype${Index_employ}"
+        ><strong>Employment Type:</strong></label
+      >
+        <select
+          id="employmenttype${Index_employ}"
+          name="employmenttype[${Index_employ}]"
+          class="form-control"
+          required
+        >
+          <option value="">--   Please Select   -- </option>
+          <option value="2">Research</option>
+          <option value="1">Teaching</option>
+          <option value="3">Other</option>
+        </select>
+        <div class="invalid-feedback">Please select the employment type.</div>
+      </div>
+
+      <div class="form-group col-md-2">
+      <label for="weeklyhours${Index_employ}"
+        ><strong>Weekly Hours:</strong></label
+      >
+        <input
+          type="number"
+          id="weeklyhours${Index_employ}"
+          name="weeklyhours[${Index_employ}]"
+          class="form-control"
+          value="{{weeklyhours}}"
+          required
+        />
+        <div class="invalid-feedback">Please enter your weekly hours.</div>
+      </div>
+
+      <div class="form-group col-md-2">
+        <label for="StartDate${Index_employ}"
+          ><strong>- StartDate${Index_employ}:</strong></label
+        >
+          <input
+            type="date"
+            id="StartDate${Index_employ}"
+            name="StartDate[${Index_employ}]"
+            class="form-control"
+            required
+            />
+            <div class="invalid-feedback">Please select the employment start date.</div>
+          </div>
+
+        <div class="form-group col-md-2">
+          <label for="EndDate${Index_employ}"
+            ><strong>EndDate:</strong></label
+          >
+            <input
+              type="date"
+              id="EndDate${Index_employ}"
+              name="EndDate[${Index_employ}]"
+              class="form-control"
+              />
+              <div class="invalid-feedback">Please select the employment end date.</div>
+            </div>
+          </div>
+
+
+
+
+    `;
+        $("#employment-container").append(employmentInputs);
+      });
+
+      $("#remove-employment").on("click", function () {
+        $("#employment-container").children().slice(-1).remove();
+        if (Index_employ > 0) {
+          Index_employ--;
+          $("#remove-employment").show();
+          $("#add-employment").show();
+          if (Index_employ <= 0) {
+            $("#remove-employment").hide();
+            $("#add-employment").show();
+          }
+        }
+      });
+</script>
+<!-- end script for register form scholarship multiple choice -->
+
+<!-- Scholarship optional/multiple choice box-->
+<!--  If the user has already entered relevant information, but due to verification errors,the system 
+  returns to the previous page while displaying the scholarship information the user has entered. -->
+<script>
+  $("#remove-scholarship").hide();
+  let scholarships = {{ scholarships|default('[]')|tojson }};
+  let Index = 0;
+  {% if scholarships %}
+  {% for scholarship in scholarships %}
+    Index ++;
+    var scholarshipInputsDisplay= `
+    <div class="form-row">
+      <div class="form-group col-md-4">
+      <label for="scholarshipID${Index}"
+        ><strong>Scholarship Name:</strong></label
+      >
+        <select
+          id="scholarshipID${Index}"
+          name="scholarshipID[${Index}]"
+          class="form-control"
+          required
+        >
+          <option value="">-- Please Select --</option>
+          {%for scholarship_name in all_scholarship_name%}
+          <option value="{{scholarship_name['ScholarshipID']}}" {%if scholarship.scholarshipID == scholarship_name['ScholarshipID'] %} selected {%endif%}>
+            {{scholarship_name['Name']}} - Value: {{scholarship_name['Value']}}
+          </option>
+          {%endfor%}
+        </select>
+        <div class="invalid-feedback">Please select the scholarship name.</div>
+      </div>
+
+      <div class="form-group col-md-4">
+        <label for="scholarship_start_date${Index}"
+          ><strong>Start Date:</strong></label
+        >
+          <input
+            type="date"
+            id="scholarship_start_date${Index}"
+            name="scholarship_start_date[${Index}]"
+            class="form-control"
+            required
+            value="{{scholarship.start_date}}"
+            />
+            <div class="invalid-feedback">Please select the scholarship start date.</div>
+          </div>
+
+      <div class="form-group col-md-4">
+      <label for="scholarship_end_date${Index}"
+        ><strong>Scholarship EndDate:</strong></label
+      >
+        <input
+          type="date"
+          id="scholarship_end_date${Index}"
+          name="scholarship_end_date[${Index}]"
+          class="form-control"
+          required
+          value="{{scholarship.end_date}}"
+          />
+          <div class="invalid-feedback">Please select the scholarship end date.</div>
+        </div>
+      </div>`
+      $("#scholarships-container").append(scholarshipInputsDisplay)
+          {%endfor%};
+
+  //script for register form scholarship multiple choice
+  //$("#remove-scholarship").hide();
+  {%else%}Index = 0;
+  {% endif %}
+
+  $("#add-scholarship").on("click", function () {
+    Index++;
+    $("#remove-scholarship").show();
+    if (Index >=3){
+      $("#add-scholarship").hide();
+    }
+    let scholarshipInputs = `
+    <div class="form-row">
+      <div class="form-group col-md-4">
+      <label for="scholarshipID${Index}"
+        ><strong>Scholarship Name:</strong></label
+      >
+        <select
+          id="scholarshipID${Index}"
+          name="scholarshipID[${Index}]"
+          class="form-control"
+          required
+        >
+          <option value="">-- Please Select --</option>
+          {%for scholarship_name in all_scholarship_name%}
+          <option value="{{scholarship_name['ScholarshipID']}}">
+            {{scholarship_name['Name']}} - Value: {{scholarship_name['Value']}}
+          </option>
+          {%endfor%}
+        </select>
+        <div class="invalid-feedback">Please select the scholarship name.</div>
+    </div>
+
+      <div class="form-group col-md-4">
+        <label for="scholarship_start_date${Index}"
+          ><strong>Start Date:</strong></label
+        >
+          <input
+            type="date"
+            id="scholarship_start_date${Index}"
+            name="scholarship_start_date[${Index}]"
+            class="form-control"
+            required
+            />
+            <div class="invalid-feedback">Please select the scholarship start date.</div>
+          </div>
+
+    <div class="form-group col-md-4">
+      <label for="scholarship_end_date${Index}"
+        ><strong>Scholarship EndDate:</strong></label
+      >
+        <input
+          type="date"
+          id="scholarship_end_date${Index}"
+          name="scholarship_end_date[${Index}]"
+          class="form-control"
+          required
+          />
+          <div class="invalid-feedback">Please select the scholarship end date.</div>
+        </div>
+      </div>
+    `;
+
+    $("#scholarships-container").append(scholarshipInputs);
+  });
+
+  $("#remove-scholarship").on("click", function () {
+    $("#scholarships-container").children().slice(-1).remove();
+    if (Index > 0) {
+      Index--;
+      $("#remove-scholarship").show();
+      $("#add-scholarship").show();
+      if (Index <= 0) {
+        $("#remove-scholarship").hide();
+          $("#add-scholarship").show();
+      }
+
+    }
+  });
+</script>
+<!-- end script for register form scholarship multiple choice -->

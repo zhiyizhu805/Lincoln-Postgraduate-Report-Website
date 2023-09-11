@@ -1,0 +1,5 @@
+dbuser = "root" 
+dbpass = "19711202"  
+dbhost = "localhost"
+dbport = "3306"
+dbname = "lupgms"

@@ -1,0 +1,42 @@
+{% extends 'user_base.html' %} {% block title %}My Supervisees{% endblock %} {%
+block content %}
+<div>
+  <div>
+    <h1>My Supervisees</h1>
+    <hr />
+  </div>
+  <div>
+    <table class="table">
+      <thead class="table table-secondary table-hover table-striped">
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Thesis Title</th>
+          <th scope="col">View</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for supervisee in supervisees%}
+        <tr>
+          <td>{{supervisee['Student Name']}}</td>
+          <td>{{supervisee['ThesisTitle']}}</td>
+
+          <td>
+            <form action="{{ url_for('supervisor.profile_supervisee') }} ">
+              <button
+                type="submit"
+                name="StudentEmail"
+                value="{{supervisee['Student Email']}}"
+                class="btn btn-primary"
+              >
+                View details
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

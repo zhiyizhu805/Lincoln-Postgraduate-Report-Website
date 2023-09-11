@@ -1,0 +1,156 @@
+{% extends 'dashboard.html' %} {% block title %}Profile{% endblock %} {% block
+  content %}
+  <div class="container">
+    <br />
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <ul class="flashes">
+      {% for message in messages %}
+      <div
+        class="alert alert-success alert-dismissible fade show"
+        role="alert"
+      >
+      {{ message }}
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+    <div class="row">
+      <div class="col-8"><h1 style="color: #fff">PG Chair</h1></div>
+      <div class="col-4" style="text-align: right">
+      </div>
+    </div>
+    <br />
+    <div style="background-color: #fff; color: rgb(41, 40, 40)">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Department Code</th>
+            <th scope="col">Edit</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for pgChair in pgChairList%}
+          <tr>
+            <th scope="row">{{pgChair['StaffID']}}</th>
+            <td>{{pgChair['Staff Name']}}</td>
+            <td>{{pgChair['Email']}}</td>
+            <td>{{pgChair['Phone']}}</td>
+            <td>{{pgChair['DepartmentCode']}}</td>
+            <td>
+              <div class="row">
+                <div class="col-auto">
+                  <a
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editpgChair{{pgChair['StaffID']}}"
+                    title="edit"
+                  >
+                    <span style="color: #2196f3"><i class="fas fa-pen"></i></span>
+                  </a>
+                </div>
+                
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+          {%endfor%}
+  
+          {% for pgChair in pgChairList%}
+          <div class="modal fade" 
+            id="editpgChair{{pgChair['StaffID']}}" 
+            tabindex="-1" 
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5">Edit PG Chair Details - ID {{pgChair['StaffID']}}</h1>
+                  <button type="button" 
+                    class="btn-close" 
+                    data-bs-dismiss="modal" 
+                    aria-label="Close">
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <!-- Edit student form -->
+                <form method="post" action="/admin/pgChair/update">
+                    <div class="mb-3">
+                      <label for="editStaffID{{pgChair['StaffID']}}" class="form-label" hidden>
+                        <b>Staff ID:</b>
+                      </label>
+                      <input type="text" 
+                        class="form-control" 
+                        id="editStaffID{{pgChair['StaffID']}}" 
+                        name="staffid" 
+                        value="{{pgChair['StaffID']}}" 
+                        hidden>
+                    </div>
+                    <div class="mb-3">
+                      <label for="editName{{pgChair['StaffID']}}" class="form-label">
+                        <b>Name:</b>
+                      </label>
+                      <input type="text" 
+                        class="form-control" 
+                        id="editName{{pgChair['StaffID']}}" 
+                        name="name" 
+                        value="{{pgChair['Staff Name']}}" 
+                        readonly>
+                    </div>
+                    <div class="mb-3">
+                      <label for="editEmail{{pgChair['StaffID']}}" class="form-label">
+                        <b>Email:</b>
+                      </label>
+                      <input type="email" 
+                        class="form-control" 
+                        id="editEmail{{pgChair['StaffIDD']}}" 
+                        name="email" 
+                        value="{{pgChair['Email']}}" 
+                        readonly>
+                    </div>
+                    <div class="mb-3">
+                      <label for="editPhone{{pgChair['StaffID']}}" class="form-label">
+                        <b>Phone:</b>
+                      </label>
+                      <input type="text" 
+                        class="form-control" 
+                        id="editPhone{{pgChair['StaffID']}}" 
+                        name="phone" 
+                        minlength="7"
+                        maxlength="14"
+                        pattern="[0-9]+"
+                        value="{{pgChair['Phone']}}" 
+                        title="invalid phone number"
+                        required>
+                      <div class="invalid-feedback">invalid phone number</div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="editDepartmentCode{{pgChair['StaffID']}}" class="form-label">
+                        <b>Department Code:</b>
+                      </label>
+                      <input type="text" 
+                        class="form-control" 
+                        id="editDepartmentCode{{pgChair['StaffID']}}" 
+                        name="departmentcode" 
+                        value="{{pgChair['DepartmentCode']}}" 
+                        readonly>
+                    </div>
+  
+                    
+                    
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a type="button" class="btn btn-secondary" href="/admin/pgChair">Cancel</a>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          {%endfor%}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {%endblock%}
+  

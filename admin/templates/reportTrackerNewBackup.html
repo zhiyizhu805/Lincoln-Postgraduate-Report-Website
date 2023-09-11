@@ -1,0 +1,940 @@
+{% extends 'dashboard.html' %} {% block title %}Profile{% endblock %} {% block
+content %} {%if completion==0%}
+<style>
+  .fullbar {
+    position: relative;
+    background-color: gray;
+    margin: 0 auto;
+    width: 100%;
+    height: 10px;
+    border-radius: 10px;
+  }
+
+  .statusBar {
+    position: absolute;
+    height: 10px;
+    width: 0;
+    border-radius: 10px;
+    background-color: green;
+  }
+</style>
+{%elif completion==20%}
+<style>
+  .fullbar {
+    position: relative;
+    background-color: gray;
+    margin: 0 auto;
+    width: 100%;
+    height: 10px;
+    border-radius: 10px;
+  }
+
+  .statusBar {
+    position: absolute;
+    height: 10px;
+    width: 20%;
+    border-radius: 10px;
+    background-color: green;
+  }
+  .statusBar {
+    animation-duration: 1.2s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+  }
+  .statusBar {
+    animation-name: statusBar;
+  }
+
+  @keyframes statusBar {
+    from {
+      width: 0;
+    }
+    to {
+      width: 20%;
+    }
+  }
+</style>
+{%elif completion==40%}
+<style>
+  .fullbar {
+    position: relative;
+    background-color: gray;
+    margin: 0 auto;
+    width: 100%;
+    height: 10px;
+    border-radius: 10px;
+  }
+
+  .statusBar {
+    position: absolute;
+    height: 10px;
+    width: 20%;
+    border-radius: 10px;
+    background-color: green;
+  }
+  .statusBar {
+    animation-duration: 1.2s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+  }
+  .statusBar {
+    animation-name: statusBar;
+  }
+
+  @keyframes statusBar {
+    from {
+      width: 0;
+    }
+    to {
+      width: 40%;
+    }
+  }
+</style>
+{%elif completion==60%}
+<style>
+  .fullbar {
+    position: relative;
+    background-color: gray;
+    margin: 0 auto;
+    width: 100%;
+    height: 10px;
+    border-radius: 10px;
+  }
+
+  .statusBar {
+    position: absolute;
+    height: 10px;
+    width: 20%;
+    border-radius: 10px;
+    background-color: green;
+  }
+  .statusBar {
+    animation-duration: 1.2s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+  }
+  .statusBar {
+    animation-name: statusBar;
+  }
+
+  @keyframes statusBar {
+    from {
+      width: 0;
+    }
+    to {
+      width: 60%;
+    }
+  }
+</style>
+{%elif completion==80%}
+<style>
+  .fullbar {
+    position: relative;
+    background-color: gray;
+    margin: 0 auto;
+    width: 100%;
+    height: 10px;
+    border-radius: 10px;
+  }
+
+  .statusBar {
+    position: absolute;
+    height: 10px;
+    width: 20%;
+    border-radius: 10px;
+    background-color: green;
+  }
+  .statusBar {
+    animation-duration: 1.2s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+  }
+  .statusBar {
+    animation-name: statusBar;
+  }
+
+  @keyframes statusBar {
+    from {
+      width: 0;
+    }
+    to {
+      width: 80%;
+    }
+  }
+</style>
+{%elif completion==100%}
+<style>
+  .fullbar {
+    position: relative;
+    background-color: gray;
+    margin: 0 auto;
+    width: 100%;
+    height: 10px;
+    border-radius: 10px;
+  }
+
+  .statusBar {
+    position: absolute;
+    height: 10px;
+    width: 20%;
+    border-radius: 10px;
+    background-color: green;
+  }
+  .statusBar {
+    animation-duration: 1.2s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+  }
+  .statusBar {
+    animation-name: statusBar;
+  }
+
+  @keyframes statusBar {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+</style>
+{%endif%}
+<div class="container">
+  <br />
+  <div class="row"><h1 style="color: #fff">Track a report</h1></div>
+  <br />
+  <div style="background-color: #fff; color: rgb(41, 40, 40)">
+    {% if reportIsExsited %}
+    <div style="padding-left: 30%; padding-top: 10%">
+      <form class="row g-3">
+        <div class="col-6">
+          <input
+            name="reportId"
+            class="form-control"
+            type="number"
+            placeholder="type report ID"
+          />
+        </div>
+        <div class="col-4">
+          <button type="submit" class="btn btn-primary mb-3">
+            <b>Track</b>
+          </button>
+        </div>
+      </form>
+    </div>
+    <br />
+    <div style="padding: 10% 10% 20% 10%">
+      <div class="row fullbar">
+        <div class="statusBar"></div>
+      </div>
+      <div class="row">
+        <div class="col-auto" style="width: 20%; text-align: right">
+          <small>Student</small> {% if statusPoint>0 %}
+          <a
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#studentStatus"
+            ><span style="color: #0a9396" title="view"
+              ><i class="fas fa-check-circle"></i></span></a
+          >{%else%}<a
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#studentReminder"
+            ><span style="color: #bc4749" title="no record"
+              ><i class="fas fa-exclamation-circle"></i></span
+          ></a>
+          {%endif%}
+        </div>
+        <!-- student submit modal section -->
+        <div
+          class="modal fade"
+          id="studentStatus"
+          tabindex="-1"
+          aria-labelledby="studentModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="studentModalLabel">
+                  Report Status
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Submitted by student at</b>:
+                      {{stuSubmittedTime['Time']}} {{stuSubmittedTime['Date']}}
+                    </div>
+                  </div>
+                  <br />
+                  <!-- {% if statusPoint==1 %}
+                      <hr />
+                      <div class="row">
+                        <div class="col-auto">
+                          <b>Supervisors:</b>
+                        </div>
+                      </div>
+                      {% for supervisor in supervisors%}
+                      <div class="row">
+                        <div class="col-auto">
+                          <b>{{supervisor['SupervisorType']}}</b>:
+                          {{supervisor['supervisorName']}}
+                        </div>
+                      </div>
+                      {%endfor%} {%endif%} -->
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <!-- {% if statusPoint==1 %}
+                    <form method="post" action="admin/remindSupervisor">
+                      <input
+                        type="hidden"
+                        name="studentId"
+                        value="{{student['StudentID']}}"
+                      />
+                      <button type="submit" class="btn btn-primary">
+                        Send Reminder
+                      </button>
+                    </form>
+                    {%endif%} -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end -->
+        <!-- student reminder modal section -->
+        <div
+          class="modal fade"
+          id="studentReminder"
+          tabindex="-1"
+          aria-labelledby="studentModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="studentModalLabel">
+                  Report Reminder
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Send Email Reminder to</b>: {{student['name']}} <br />
+                      with email address: {{student['Email']}}
+                    </div>
+                  </div>
+                  <br />
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+
+                <form method="post" action="admin/trackerReminderStudent">
+                  <input
+                    type="hidden"
+                    name="name"
+                    value="{{student['name']}}"
+                  />
+                  <input
+                    type="hidden"
+                    name="email"
+                    value="{{student['Email']}}"
+                  />
+                  <input type="hidden" name="reportId" value="{{reportId}}" />
+                  <button type="submit" class="btn btn-primary">
+                    Send Reminder
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end -->
+        <div class="col-auto" style="width: 20%; text-align: right">
+          <small>Principal Supervisor</small> {% if statusPoint>1 %}
+          <a
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#superPStatus"
+          >
+            <span style="color: #0a9396" title="view"
+              ><i class="fas fa-check-circle"></i></span></a
+          >{%elif statusPoint==1%}<a
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#supPReminder"
+            ><span style="color: #bc4749" title="send reminder"
+              ><i class="fas fa-exclamation-circle"></i></span></a
+          >{%else%}<span style="color: #ee9b00" title="waiting"
+            ><i class="fas fa-clock"></i
+          ></span>
+          {%endif%}
+        </div>
+        <!-- supP submit modal section -->
+        <div
+          class="modal fade"
+          id="superPStatus"
+          tabindex="-1"
+          aria-labelledby="supervisorModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="supervisorModalLabel">
+                  Report Status
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Submitted by Principal Supervisor at</b>:
+                      {{supPSubmittedTime['Time']}}
+                      {{supPSubmittedTime['Date']}}
+                    </div>
+                  </div>
+
+                  <br />
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end -->
+        <!-- supP reminder modal section -->
+        <div
+          class="modal fade"
+          id="supPReminder"
+          tabindex="-1"
+          aria-labelledby="supervisorModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="supervisorModalLabel">
+                  Report Status
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Send Email Reminder to</b>:
+                      {{supervisors[0]['supervisorName']}} <br />
+                      with email address: {{supervisors[0]['Email']}}
+                    </div>
+                  </div>
+                  <br />
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+
+                <form method="post" action="admin/trackerReminderSupP">
+                  <input
+                    type="hidden"
+                    name="name"
+                    value=" {{supervisors[0]['supervisorName']}}"
+                  />
+                  <input
+                    type="hidden"
+                    name="email"
+                    value="{{supervisors[0]['Email']}}"
+                  />
+                  <input type="hidden" name="reportId" value="{{reportId}}" />
+                  <button type="submit" class="btn btn-primary">
+                    Send Reminder
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end -->
+        <div class="col-auto" style="width: 20%; text-align: right">
+          <small>Associate Supervisor</small> {% if statusPoint>2 %}
+          <a type="button" data-bs-toggle="modal" data-bs-target="#supA1Status">
+            <span style="color: #0a9396" title="view"
+              ><i class="fas fa-check-circle"></i></span></a
+          >{%elif statusPoint==2%}<a
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#supA1Reminder"
+            ><span style="color: #bc4749" title="no record"
+              ><i class="fas fa-exclamation-circle"></i></span></a
+          >{%else%}<span style="color: #ee9b00" title="waiting"
+            ><i class="fas fa-clock"></i
+          ></span>
+          {%endif%}
+        </div>
+        <!-- supA1 submit modal section -->
+        <div
+          class="modal fade"
+          id="supA1Status"
+          tabindex="-1"
+          aria-labelledby="supervisorModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="supervisorModalLabel">
+                  Report Status
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Submitted by Associate Supervisor at</b>:
+                      {{supA1SubmittedTime['Time']}}
+                      {{supA1SubmittedTime['Date']}}
+                    </div>
+                  </div>
+                  <br />
+                  <br />
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end -->
+        <!-- supA1 reminder modal section -->
+        <div
+          class="modal fade"
+          id="supA1Reminder"
+          tabindex="-1"
+          aria-labelledby="supervisorModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="supervisorModalLabel">
+                  Report Status
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Send Email Reminder to</b>:
+                      {{supervisors[1]['supervisorName']}} <br />
+                      with email address: {{supervisors[1]['Email']}}
+                    </div>
+                  </div>
+                  <br />
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+
+                <form method="post" action="admin/trackerReminderSupA">
+                  <input
+                    type="hidden"
+                    name="name"
+                    value=" {{supervisors[1]['supervisorName']}}"
+                  />
+                  <input
+                    type="hidden"
+                    name="email"
+                    value="{{supervisors[1]['Email']}}"
+                  />
+                  <input type="hidden" name="reportId" value="{{reportId}}" />
+                  <button type="submit" class="btn btn-primary">
+                    Send Reminder
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end -->
+        <div class="col-auto" style="width: 20%; text-align: right">
+          <small>Associate Supervisor</small> {% if statusPoint>3 %}
+          <a type="button" data-bs-toggle="modal" data-bs-target="#supA2Status">
+            <span style="color: #0a9396" title="view"
+              ><i class="fas fa-check-circle"></i></span></a
+          >{%elif statusPoint==3%}<a
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#supA2Reminder"
+            ><span style="color: #bc4749" title="no record"
+              ><i class="fas fa-exclamation-circle"></i></span></a
+          >{%else%}<span style="color: #ee9b00" title="waiting"
+            ><i class="fas fa-clock"></i
+          ></span>
+          {%endif%}
+        </div>
+        <!-- supA2 submit modal section -->
+        <div
+          class="modal fade"
+          id="supA2Status"
+          tabindex="-1"
+          aria-labelledby="supervisorModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="supervisorModalLabel">
+                  Report Status
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Submitted by Associate Supervisor at</b>:
+                      {{supA2SubmittedTime['Time']}}
+                      {{supA2SubmittedTime['Date']}}
+                    </div>
+                  </div>
+                  <br />
+                  <br />
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end -->
+        <!-- supA2 reminder modal section -->
+        <div
+          class="modal fade"
+          id="supA2Reminder"
+          tabindex="-1"
+          aria-labelledby="supervisorModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="supervisorModalLabel">
+                  Report Status
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Send Email Reminder to</b>:
+                      {{supervisors[2]['supervisorName']}} <br />
+                      with email address: {{supervisors[2]['Email']}}
+                    </div>
+                  </div>
+                  <br />
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+
+                <form method="post" action="admin/trackerReminderSupA">
+                  <input
+                    type="hidden"
+                    name="name"
+                    value=" {{supervisors[2]['supervisorName']}}"
+                  />
+                  <input
+                    type="hidden"
+                    name="email"
+                    value="{{supervisors[2]['Email']}}"
+                  />
+                  <input type="hidden" name="reportId" value="{{reportId}}" />
+                  <button type="submit" class="btn btn-primary">
+                    Send Reminder
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end -->
+        <div class="col-auto" style="width: 20%; text-align: right">
+          <small>Convenor</small> {% if statusPoint>4 %}
+          <a
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#convenorStatus"
+            ><span style="color: #0a9396" title="view"
+              ><i class="fas fa-check-circle"></i></span></a
+          >{%elif statusPoint==4%}<a
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#conReminder"
+            ><span style="color: #bc4749" title="no record"
+              ><i class="fas fa-exclamation-circle"></i></span></a
+          >{%else%}<span style="color: #ee9b00" title="waiting"
+            ><i class="fas fa-clock"></i
+          ></span>
+          {%endif%}
+        </div>
+        <!--con submit modal section -->
+        <div
+          class="modal fade"
+          id="convenorStatus"
+          tabindex="-1"
+          aria-labelledby="convenorModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="studentModalLabel">
+                  Report Status
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Final report submitted at</b>:
+                      {{conSubmittedTime['Time']}} {{conSubmittedTime['Date']}}
+                    </div>
+                  </div>
+                  <br />
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end -->
+        <!-- con reminder modal section -->
+        <div
+          class="modal fade"
+          id="conReminder"
+          tabindex="-1"
+          aria-labelledby="supervisorModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="supervisorModalLabel">
+                  Report Status
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Send Email Reminder to</b>:
+                      {{conDetail['convenorName']}} <br />
+                      with email address: {{conDetail['Email']}}
+                    </div>
+                  </div>
+                  <br />
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+
+                <form method="post" action="admin/trackerReminderCon">
+                  <input
+                    type="hidden"
+                    name="name"
+                    value=" {{conDetail['convenorName']}}"
+                  />
+                  <input
+                    type="hidden"
+                    name="email"
+                    value=" {{conDetail['Email']}}"
+                  />
+                  <input type="hidden" name="reportId" value="{{reportId}}" />
+                  <button type="submit" class="btn btn-primary">
+                    Send Reminder
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end -->
+      </div>
+      <br /><br /><br />
+      <div class="row">
+        <div class="col-auto" style="padding-left: 30%">
+          <b>Report ID</b>: {{reportId}} ---<b>Status</b>: {%if statusPoint==0
+          %} Student Started {%elif statusPoint==1 %} Student Submitted {%elif
+          statusPoint==2 %} Principal Supervisor Submitted {%elif statusPoint==3
+          %} Associate Supervisor Submitted {%elif statusPoint==4 %} Supervisors
+          Submitted{%elif statusPoint==5 %}Report Completed{%endif%}
+        </div>
+      </div>
+    </div>
+    {%else%}
+    <div style="padding-left: 30%; padding-top: 20%; padding-bottom: 20%">
+      <form class="row g-3">
+        <div class="col-6">
+          <input
+            name="reportId"
+            class="form-control"
+            type="number"
+            placeholder="type report ID"
+          />
+        </div>
+        <div class="col-4">
+          <button type="submit" class="btn btn-primary mb-3">
+            <b>Track</b>
+          </button>
+        </div>
+      </form>
+      <div class="row">
+        <div class="col-auto" style="padding-left: 15%; color: #bc4749">
+          {{errorMsg}}
+        </div>
+      </div>
+    </div>
+    {%endif%}
+  </div>
+</div>
+
+{% endblock %}

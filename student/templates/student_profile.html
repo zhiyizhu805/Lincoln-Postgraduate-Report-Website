@@ -1,0 +1,434 @@
+{% extends 'user_base.html' %} {% block title %}Profile{% endblock %} {% block
+content %}
+<div>
+  {% with messages = get_flashed_messages() %} {% if messages %} {% for message
+  in messages %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button
+    >{% endfor %}
+  </div>
+  {% endif %} {% endwith %}
+  <h1>My Profile</h1>
+  <hr />
+</div>
+<div>
+  <form>
+    <p class="h5">
+      <strong>Basic Information</strong>
+      <span style="float: right">
+        <a
+          href="/student/profile/edit/studentinfo"
+          class="btn btn-outline-secondary"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-pen"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"
+            />
+          </svg>
+          <span class="visually-hidden">Button</span>
+        </a>
+      </span>
+    </p>
+    <hr />
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="studentid"><strong>Student ID:</strong></label>
+        <input
+          type="number"
+          id="studentid"
+          name="studentid"
+          class="form-control"
+          readonly
+          value="{{ student['StudentID'] }}"
+        />
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="studentname"><strong>Student Name:</strong></label>
+        <input
+          type="text"
+          id="studentname"
+          name="studentname"
+          class="form-control"
+          readonly
+          value="{{ student['Student Name'] }}"
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="enrolmentdate"><strong>Enrolment Date:</strong></label>
+        <input
+          type="date"
+          id="enrolmentdate"
+          name="enrolmentdate"
+          class="form-control"
+          readonly
+          value="{{ student['EnrolmentDate'] }}"
+        />
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="modeofstudy"><strong>Mode Of Study:</strong></label>
+        <input
+          type="text"
+          id="modeofstudy"
+          name="modeofstudy"
+          class="form-control"
+          readonly
+          value="{{ student['ModeOfStudy'] }}"
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="phone"><strong>Phone:</strong></label>
+        <input
+          type="text"
+          id="phone"
+          name="phone"
+          class="form-control"
+          readonly
+          value="{{ student['Phone'] }}"
+        />
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="email"><strong>Email:</strong></label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          readonly
+          value="{{ student['Email'] }}"
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <label for="address"><strong>Address:</strong></label>
+        <input
+          type="text"
+          id="address"
+          name="address"
+          class="form-control"
+          readonly
+          value="{{ student['Address'] }}"
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <label for="thesistitle"><strong>Thesis Title:</strong></label>
+        <input
+          type="text"
+          id="thesistitle"
+          name="thesistitle"
+          class="form-control"
+          readonly
+          value="{{ student['ThesisTitle'] }}"
+        />
+      </div>
+    </div>
+
+    <br />
+    <p class="h5"><strong>Supervision Team</strong></p>
+    <hr />
+    <div class="form-row">
+      {% for sup in student_sup %}
+      <div class="form-group col-md-4">
+        <label for="supervisorname"
+          ><strong>{{ sup['SupervisorType'] }}:</strong></label
+        >
+        <input
+          type="text"
+          id="supervisorname"
+          name="supervisorname"
+          class="form-control"
+          readonly
+          value="{{ sup['Supervisor Name'] }}"
+        />
+      </div>
+      {% endfor %}
+    </div>
+  </form>
+</div>
+
+<br />
+<form>
+  <p class="h5">
+    <strong>Current Employment Information:</strong>
+    <span style="float: right">
+      <!--view history link-->
+      <a
+        type="button"
+        class="btn btn-outline-secondary"
+        href="/student/profile/history/studentemp"
+        title="Employment History"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-eye"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M8 1C4.686 1 2 3.459 2 6c0 2.046 2.417 3.706 5.5 3.982V11.5a.5.5 0 0 0 1 0v-.518C11.583 9.706 14 8.046 14 6c0-2.541-2.686-5-6-5zm0 1.5a3.5 3.5 0 0 0-3.463 3.083A3.467 3.467 0 0 0 4.5 8a3.5 3.5 0 0 0 6.963-.417A3.467 3.467 0 0 0 11.5 6a3.5 3.5 0 0 0-3.5-3.5zm0 1.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"
+          />
+        </svg>
+        <span class="visually-hidden"></span>
+      </a>
+      <!--edit link-->
+      <a
+        type="button"
+        class="btn btn-outline-secondary"
+        href="/student/profile/edit/studentemp"
+        title="Edit"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-pen"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"
+          />
+        </svg>
+        <span class="visually-hidden"></span>
+      </a>
+      <!--add link-->
+      <a
+        type="button"
+        class="btn btn-outline-secondary"
+        href="/student/profile/add/studentemp"
+        title="Add Employment Record"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-plus"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
+          />
+        </svg>
+        <span class="visually-hidden"></span>
+      </a>
+    </span>
+  </p>
+  <hr />
+  {% for emp in student_emp %} {% if emp['EmploymentID'] == None %}
+  <p>You don't have any employment information.</p>
+  {% else %}
+  <div class="form-row">
+    <div class="form-group col-md-3">
+      <label for="employmenttype"><strong>Employment Type:</strong></label>
+      <input
+        type="text"
+        id="employmenttype"
+        name="employmenttype"
+        class="form-control"
+        readonly
+        value="{{ emp['EmploymentType'] }}"
+      />
+    </div>
+
+    <div class="form-group col-md-3">
+      <label for="supervisorname"><strong>Supervisor Name:</strong></label>
+      <input
+        type="text"
+        id="supervisorname"
+        name="supervisorname"
+        class="form-control"
+        readonly
+        value="{{ emp['Supervisor Name'] }}"
+      />
+    </div>
+
+    <div class="form-group col-md-2">
+      <label for="weeklyhours"><strong>Weekly Hours:</strong></label>
+      <input
+        type="number"
+        id="weeklyhours"
+        name="weeklyhours"
+        class="form-control"
+        readonly
+        value="{{ emp['WeeklyHours'] }}"
+      />
+    </div>
+
+    <div class="form-group col-md-2">
+      <label for="startdate"><strong>Start Date:</strong></label>
+      <input type="text" id="startdate" name="startdate" class="form-control"
+      readonly {%if emp['StartDate'] is not none%} value="{{
+      emp['StartDate'].strftime('%d/%m/%Y') }}" {%endif%} />
+    </div>
+
+    <div class="form-group col-md-2">
+      <label for="enddate"><strong>End Date:</strong></label>
+      {% if emp['EndDate'] is none %}
+      <input
+        type="text"
+        id="enddate"
+        name="enddate"
+        class="form-control"
+        readonly
+        value="Ongoing"
+      />
+      {% else %}
+      <input
+        type="text"
+        id="enddate"
+        name="enddate"
+        class="form-control"
+        readonly
+        value="{{ emp['EndDate'].strftime('%d/%m/%Y') }}"
+      />
+      {% endif %}
+    </div>
+  </div>
+  {% endif %} {% endfor %}
+</form>
+
+<br />
+<p class="h5">
+  <strong>Current Scholarship Information:</strong>
+  <span style="float: right">
+    <!--view history link-->
+    <a
+      type="button"
+      class="btn btn-outline-secondary"
+      href="/student/profile/history/studentscho"
+      title="Scholarship History"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-eye"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M8 1C4.686 1 2 3.459 2 6c0 2.046 2.417 3.706 5.5 3.982V11.5a.5.5 0 0 0 1 0v-.518C11.583 9.706 14 8.046 14 6c0-2.541-2.686-5-6-5zm0 1.5a3.5 3.5 0 0 0-3.463 3.083A3.467 3.467 0 0 0 4.5 8a3.5 3.5 0 0 0 6.963-.417A3.467 3.467 0 0 0 11.5 6a3.5 3.5 0 0 0-3.5-3.5zm0 1.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"
+        />
+      </svg>
+      <span class="visually-hidden"></span>
+    </a>
+    <!--edit link-->
+    <a
+      type="button"
+      class="btn btn-outline-secondary"
+      href="/student/profile/edit/studentscho"
+      title="Edit"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-pen"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"
+        />
+      </svg>
+      <span class="visually-hidden">Edit</span>
+    </a>
+    <!--add link-->
+    <a
+      type="button"
+      class="btn btn-outline-secondary"
+      href="/student/profile/add/studentscho"
+      title="Add Scholarship Record"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-plus"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
+        />
+      </svg>
+      <span class="visually-hidden"></span>
+    </a>
+  </span>
+</p>
+<hr />
+{% for scho in student_scholar %}
+<form>
+  <div class="form-row">
+    <div class="form-group col-md-3">
+      <label for="scholarship_name"><strong>Scholarship Name:</strong></label>
+      <input
+        type="text"
+        id="scholarship_name"
+        name="scholarship_name"
+        class="form-control"
+        readonly
+        value="{{ scho['Name'] }}"
+      />
+    </div>
+
+    <div class="form-group col-md-3">
+      <label for="scholarship_value"><strong>Scholarship Value:</strong></label>
+      <input
+        type="number"
+        id="scholarship_value"
+        name="scholarship_value"
+        class="form-control"
+        readonly
+        value="{{ scho['Value'] }}"
+      />
+    </div>
+
+    <div class="form-group col-md-3">
+      <label for="startdate"><strong>Start Date:</strong></label>
+      <input type="text" id="startdate" name="startdate" class="form-control"
+      readonly {% if scho['StartDate'] is not none %} value="{{
+      scho['StartDate'].strftime('%d/%m/%Y') }}" {%endif%} />
+    </div>
+
+    <div class="form-group col-md-3">
+      <label for="enddate"><strong>End Date:</strong></label>
+      <input type="text" id="enddate" name="enddate" class="form-control"
+      readonly {% if scho['EndDate'] is not none %} value="{{
+      scho['EndDate'].strftime('%d/%m/%Y') }}" {%endif%} />
+    </div>
+  </div>
+
+  {% endfor %}
+</form>
+
+{% endblock %}

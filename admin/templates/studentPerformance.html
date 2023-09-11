@@ -1,0 +1,325 @@
+{% extends 'dashboard.html' %} {% block title %}Report{% endblock %} {% block
+content %}
+<div class="container">
+  <br />
+  <div class="row">
+    <div class="col-8">
+      <h1 style="color: #fff">Student Performance Analysis</h1>
+    </div>
+  </div>
+  <br />
+  <div style="background-color: #fff; color: rgb(41, 40, 40)">
+    <div style="padding-bottom: 10%">
+      <table class="table align-middle" style="font-size: small">
+        <thead style="font-size: small">
+          <tr>
+            <th scope="col">Student Name</th>
+            <th scope="col">Student ID</th>
+            <th scope="col">Department</th>
+            <th scope="col">Superv</th>
+            <th scope="col">Asst. Spvr</th>
+            <th scope="col">Asst. Spvr</th>
+            <th scope="col">2022-Jun</th>
+            <th scope="col">2022-DEC</th>
+            <th scope="col">2023-Jun</th>
+            <th scope="col">Operation</th>
+          </tr>
+        </thead>
+        <tbody id="studentPerformance">
+          {% for performance in performanceList%}
+          <tr>
+            <td>{{performance['studentName']}}</td>
+            <td>
+              <a
+                style="text-decoration: none"
+                href="{{url_for('admin.individulPerformance', studentId=performance['studentId'])}}"
+                >{{performance['studentId']}}</a
+              >
+            </td>
+            <td>{{performance['dep']}}</td>
+            {% for sup in performance['sup'] %}
+            <td>{{sup}}</td>
+            <!-- <td>{{sup['Associate Supervisor']}}</td> -->
+            {%endfor%} {%for rating in performance['ratings']%}
+            <td>
+              {% if rating== 'R'%}<span style="color: red"
+                ><i class="fas fa-circle"></i
+              ></span>
+              {% elif rating== 'G'%}<span style="color: green"
+                ><i class="fas fa-circle"></i
+              ></span>
+              {% elif rating== 'O'%}<span style="color: orange"
+                ><i class="fas fa-circle"></i
+              ></span>
+              {% elif rating== 'X'%}<span style="color: brown" title="suspended"
+                ><i class="fas fa-ban"></i
+              ></span>
+              {% elif not rating or rating == ' '%}<span
+                style="color: grey"
+                title="report pending"
+                ><i class="fas fa-clock"></i
+              ></span>
+              {%endif%}
+            </td>
+            {%endfor%} {% if performance['operation']=='Pending'%}
+            <td>
+              <span style="color: grey" title="pending"
+                ><i class="fas fa-hourglass-half"></i
+              ></span>
+            </td>
+            {% elif performance['operation']=='Meeting'%}
+
+            <td>
+              <a
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#meeting{{performance['studentId']}}"
+              >
+                <span style="color: #2196f3" title="arrange meeting"
+                  ><i class="fas fa-user-friends"></i
+                ></span>
+              </a>
+            </td>
+            <!-- meeting modal section -->
+            <div
+              class="modal fade"
+              id="meeting{{performance['studentId']}}"
+              tabindex="-1"
+              aria-labelledby="studentModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="studentModalLabel">
+                      Arrange Meeting
+                    </h1>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="container">
+                      <div class="row">
+                        <div class="col-auto">
+                          <b>Arrange Meeting for</b> <br />
+                          student: {{performance['studentName']}} <br />
+                          Convenor: {{performance['convenorName']}}
+                        </div>
+                      </div>
+                      <br />
+                    </div>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+
+                    <form method="post" action="admin/arrangeMeeting">
+                      <input
+                        type="hidden"
+                        name="studentName"
+                        value="{{performance['studentName']}}"
+                      />
+                      <input
+                        type="hidden"
+                        name="convenorName"
+                        value="{{performance['convenorName']}}"
+                      />
+                      <input
+                        type="hidden"
+                        name="studentEmail"
+                        value="{{performance['studentEmail']}}"
+                      />
+                      <input
+                        type="hidden"
+                        name="convenorEmail"
+                        value="{{performance['convenorEmail']}}"
+                      />
+                      <button type="submit" class="btn btn-primary">
+                        Arrange Meeting
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- end -->
+            {% elif performance['operation']=='Reminder'%}
+            <td>
+              <a
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#studentReminder{{performance['studentId']}}"
+              >
+                <span style="color: #2196f3" title="send reminder"
+                  ><i class="fas fa-bell"></i></span
+              ></a>
+            </td>
+            <!-- student reminder modal section -->
+            <div
+              class="modal fade"
+              id="studentReminder{{performance['studentId']}}"
+              tabindex="-1"
+              aria-labelledby="studentModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="studentModalLabel">
+                      Performance Reminder
+                    </h1>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="container">
+                      <div class="row">
+                        <div class="col-auto">
+                          <b>Send Email Reminder to</b>:
+                          {{performance['studentName']}} <br />
+                          with email address: {{performance['studentEmail']}}
+                        </div>
+                      </div>
+                      <br />
+                    </div>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+
+                    <form
+                      method="post"
+                      action="admin/studentPerformanceReminder"
+                    >
+                      <input
+                        type="hidden"
+                        name="name"
+                        value="{{performance['studentName']}}"
+                      />
+                      <input
+                        type="hidden"
+                        name="email"
+                        value=" {{performance['studentEmail']}}"
+                      />
+
+                      <button type="submit" class="btn btn-primary">
+                        Send Reminder
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- end -->
+
+            {% elif performance['operation']=='Follow Up'%}
+            <td>
+              <a
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#followup{{performance['studentId']}}"
+              >
+                <span style="color: #2196f3" title="follow up"
+                  ><i class="fas fa-comments"></i></span
+              ></a>
+            </td>
+            <!-- convener follow up modal section -->
+            <div
+              class="modal fade"
+              id="followup{{performance['studentId']}}"
+              tabindex="-1"
+              aria-labelledby="studentModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="studentModalLabel">
+                      Convenor Follow Up Reminder
+                    </h1>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="container">
+                      <div class="row">
+                        <div class="col-auto">
+                          <b>Send Email Reminder to</b>:
+                          {{performance['convenorName']}} <br />
+                          with email address: {{performance['convenorEmail']}}
+                        </div>
+                      </div>
+                      <br />
+                    </div>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+
+                    <form method="post" action="admin/followupReminder">
+                      <input
+                        type="hidden"
+                        name="studentName"
+                        value="{{performance['studentName']}}"
+                      />
+                      <input
+                        type="hidden"
+                        name="convenorName"
+                        value="{{performance['convenorName']}}"
+                      />
+                      <input
+                        type="hidden"
+                        name="convenorEmail"
+                        value=" {{performance['convenorEmail']}}"
+                      />
+
+                      <button type="submit" class="btn btn-primary">
+                        Send Reminder
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- end -->
+            {%endif%}
+          </tr>
+          {%endfor%}
+        </tbody>
+      </table>
+    </div>
+    <br />
+  </div>
+</div>
+
+{% endblock %}

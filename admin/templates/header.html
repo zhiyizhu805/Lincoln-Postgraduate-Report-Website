@@ -1,0 +1,42 @@
+<!-- Navbar (sit on top) -->
+<div class="w3-top">
+  <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+    <a href="/" class="w3-bar-item w3-button"><b>Lincoln </b> Monitoring</a>
+    <!-- Float links to the right. Hide them on small screens -->
+    <div class="w3-right w3-hide-small">
+      {%if not username%}
+      <a href="#about" class="w3-bar-item w3-button">Faculty</a>
+      <a href="#contact" class="w3-bar-item w3-button">Contact</a>
+      <a
+        class="w3-bar-item w3-button"
+        id="login-button"
+        type="button"
+        data-bs-toggle="modal"
+        data-bs-target="#loginModal"
+        >Login</a
+      >
+      <a
+        class="w3-bar-item w3-button"
+        id="login-button"
+        type="button"
+        data-bs-toggle="modal"
+        data-bs-target="#registerModal"
+        >Register</a
+      >
+
+      {%else%}
+      <a href="/profile" class="w3-bar-item w3-button">My profile</a>
+      {%if role == 'Student'%}
+      <a href="/report" class="w3-bar-item w3-button">My report</a>
+      {%elif role == 'PG Administrator' %}
+      <a href="{{ url_for('admin.dashboard') }}" class="w3-bar-item w3-button"
+        >PG Administrator Page</a
+      >
+      {%elif role == 'Supervisor' %}
+      <a href="#" class="w3-bar-item w3-button">Supervisor Page</a>
+      {%endif%}
+      <a href="/logout" class="w3-bar-item w3-button">Log Out</a>
+      {%endif%}
+    </div>
+  </div>
+</div>

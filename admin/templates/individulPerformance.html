@@ -1,0 +1,289 @@
+{% extends 'dashboard.html' %} {% block title %}Report{% endblock %} {% block
+content %}
+<div class="container">
+  <br />
+  <div class="row">
+    <div class="col-8">
+      <h1 style="color: #fff">Individul Student Performance</h1>
+    </div>
+    <div class="col-4" style="text-align: right">
+      <a
+        class="btn btn-primary"
+        href="{{ url_for('admin.studentPerformance') }}"
+        role="button"
+        >Back To List</a
+      >
+    </div>
+  </div>
+  <br />
+  <div
+    style="background-color: #fff; color: rgb(41, 40, 40); padding-bottom: 10%"
+  >
+    <br />
+    <div class="row">
+      <div class="col" style="text-align: center">
+        Student ID: {{studentId}}
+      </div>
+    </div>
+    <br />
+    <div id="barchart" style="width: 600px; height: 500px; margin: auto"></div>
+
+    <br />
+    <div class="row">
+      <div class="col" style="text-align: center">
+        ***In each year, the dataset represents the ratings from principla
+        supervisor, associate supervisors(from top to buttom)***.
+      </div>
+    </div>
+    <br />
+    <br />
+  </div>
+</div>
+<script>
+  var chartDom = document.getElementById("barchart");
+  var myChart = echarts.init(chartDom);
+  var option;
+  option = {
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        type: "shadow",
+      },
+    },
+    legend: {},
+    grid: {
+      left: "3%",
+      right: "4%",
+      bottom: "3%",
+      containLabel: true,
+    },
+    xAxis: [
+      {
+        type: "value",
+      },
+    ],
+    yAxis: [
+      {
+        type: "category",
+        data: ["2022-JUN", "2022-DEC", "2023-JUN"],
+      },
+    ],
+    series: [
+      {
+        name: "Excellent",
+        type: "bar",
+        stack: "a",
+
+        emphasis: {
+          focus: "series",
+        },
+        // num of excellent from sup1 from 2022-JUN to "2023-JUN"
+        data: [
+          "{{resultNumSup1PeriodExcList[0]}}",
+          "{{resultNumSup1PeriodExcList[1]}}",
+          "{{resultNumSup1PeriodExcList[2]}}",
+        ],
+      },
+      {
+        name: "Good",
+        type: "bar",
+        stack: "a",
+
+        emphasis: {
+          focus: "series",
+        },
+        data: [
+          "{{resultNumSup1PeriodGoodList[0]}}",
+          "{{resultNumSup1PeriodGoodList[1]}}",
+          "{{resultNumSup1PeriodGoodList[2]}}",
+        ],
+      },
+      {
+        name: "Satisfactory",
+        type: "bar",
+        stack: "a",
+
+        emphasis: {
+          focus: "series",
+        },
+        data: [
+          "{{resultNumSup1PeriodSatList[0]}}",
+          "{{resultNumSup1PeriodSatList[1]}}",
+          "{{resultNumSup1PeriodSatList[2]}}",
+        ],
+      },
+      {
+        name: "Below Average",
+        type: "bar",
+        stack: "a",
+
+        emphasis: {
+          focus: "series",
+        },
+        data: [
+          "{{resultNumSup1PeriodBAList[0]}}",
+          "{{resultNumSup1PeriodBAList[1]}}",
+          "{{resultNumSup1PeriodBAList[2]}}",
+        ],
+      },
+      {
+        name: "Unsatisfactory",
+        type: "bar",
+        stack: "a",
+
+        emphasis: {
+          focus: "series",
+        },
+        data: [
+          "{{resultNumSup1PeriodUnSatList[0]}}",
+          "{{resultNumSup1PeriodUnSatList[1]}}",
+          "{{resultNumSup1PeriodUnSatList[2]}}",
+        ],
+      },
+
+      {
+        name: "Excellent",
+        type: "bar",
+        stack: "b",
+
+        emphasis: {
+          focus: "series",
+        },
+        data: [
+          "{{resultNumSup2PeriodExcList[0]}}",
+          "{{resultNumSup2PeriodExcList[1]}}",
+          "{{resultNumSup2PeriodExcList[2]}}",
+        ],
+      },
+      {
+        name: "Good",
+        type: "bar",
+        stack: "b",
+
+        emphasis: {
+          focus: "series",
+        },
+        data: [
+          "{{resultNumSup2PeriodGoodList[0]}}",
+          "{{resultNumSup2PeriodGoodList[1]}}",
+          "{{resultNumSup2PeriodGoodList[2]}}",
+        ],
+      },
+      {
+        name: "Satisfactory",
+        type: "bar",
+        stack: "b",
+
+        emphasis: {
+          focus: "series",
+        },
+        data: [
+          "{{resultNumSup2PeriodSatList[0]}}",
+          "{{resultNumSup2PeriodSatList[1]}}",
+          "{{resultNumSup2PeriodSatList[2]}}",
+        ],
+      },
+      {
+        name: "Below Average",
+        type: "bar",
+        stack: "b",
+
+        emphasis: {
+          focus: "series",
+        },
+        data: [
+          "{{resultNumSup2PeriodBAList[0]}}",
+          "{{resultNumSup2PeriodBAList[1]}}",
+          "{{resultNumSup2PeriodBAList[2]}}",
+        ],
+      },
+      {
+        name: "Unsatisfactory",
+        type: "bar",
+        stack: "b",
+
+        emphasis: {
+          focus: "series",
+        },
+        data: [
+          "{{resultNumSup2PeriodUnSatList[0]}}",
+          "{{resultNumSup2PeriodUnSatList[1]}}",
+          "{{resultNumSup2PeriodUnSatList[2]}}",
+        ],
+      },
+      {
+        name: "Excellent",
+        type: "bar",
+        stack: "c",
+
+        emphasis: {
+          focus: "series",
+        },
+        data: [
+          "{{resultNumSup3PeriodExcList[0]}}",
+          "{{resultNumSup3PeriodExcList[1]}}",
+          "{{resultNumSup3PeriodExcList[2]}}",
+        ],
+      },
+      {
+        name: "Good",
+        type: "bar",
+        stack: "c",
+
+        emphasis: {
+          focus: "series",
+        },
+        data: [
+          "{{resultNumSup3PeriodGoodList[0]}}",
+          "{{resultNumSup3PeriodGoodList[1]}}",
+          "{{resultNumSup3PeriodGoodList[2]}}",
+        ],
+      },
+      {
+        name: "Satisfactory",
+        type: "bar",
+        stack: "c",
+
+        emphasis: {
+          focus: "series",
+        },
+        data: [
+          "{{resultNumSup3PeriodSatList[0]}}",
+          "{{resultNumSup3PeriodSatList[1]}}",
+          "{{resultNumSup3PeriodSatList[2]}}",
+        ],
+      },
+      {
+        name: "Below Average",
+        type: "bar",
+        stack: "c",
+
+        emphasis: {
+          focus: "series",
+        },
+        data: [
+          "{{resultNumSup3PeriodBAList[0]}}",
+          "{{resultNumSup3PeriodBAList[1]}}",
+          "{{resultNumSup3PeriodBAList[2]}}",
+        ],
+      },
+      {
+        name: "Unsatisfactory",
+        type: "bar",
+        stack: "c",
+
+        emphasis: {
+          focus: "series",
+        },
+        data: [
+          "{{resultNumSup3PeriodUnSatList[0]}}",
+          "{{resultNumSup3PeriodUnSatList[1]}}",
+          "{{resultNumSup3PeriodUnSatList[2]}}",
+        ],
+      },
+    ],
+  };
+  option && myChart.setOption(option);
+</script>
+
+{% endblock %}

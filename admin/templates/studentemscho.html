@@ -1,0 +1,142 @@
+{% extends 'dashboard.html' %} {% block title %}Profile{% endblock %} {% block
+content %}
+<div class="container">
+  <br />
+  <div class="row"><h1 style="color: #fff">Student Information</h1></div>
+  <br />
+  <div class="container" style="background-color: #fff; color: rgb(41, 40, 40)">
+    <br />
+    <p class="h5">Scholarship Record</p>
+    <hr />
+    {% if scholarships %} {% for sch in scholarships %}
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label for="scholarship_name" class="form-label">Name</label>
+        <input
+          type="text"
+          id="scholarship_name"
+          name="scholarship_name"
+          class="form-control"
+          disabled
+          value="{{sch['Name']}}"
+        />
+      </div>
+
+      <div class="col-md-6">
+        <label for="value" class="form-label">Value</label>
+        <input
+          type="number"
+          id="value"
+          name="value"
+          class="form-control"
+          disabled
+          value="{{sch['Value']}}"
+        />
+      </div>
+
+      <div class="col-md-6">
+        <label for="start_date" class="form-label">Start Date</label>
+        <input
+          type="date"
+          id="start_date"
+          name="start_date"
+          class="form-control"
+          disabled
+          value="{{sch['StartDate']}}"
+        />
+      </div>
+      <div class="col-md-6">
+        <label for="end_date" class="form-label">End Date</label>
+        <input
+          type="date"
+          id="end_date"
+          name="end_date"
+          class="form-control"
+          disabled
+          value="{{ sch['EndDate'] }}"
+        />
+      </div>
+    </div>
+    <br /><br />
+    <br />
+    {% endfor %}{%else%}
+    <p>This student doesn't have any scholarship record.</p>
+    {% endif %}
+  </div>
+  <br />
+  <div class="container" style="background-color: #fff; color: rgb(41, 40, 40)">
+    <br />
+    <p class="h5">Employment History</p>
+    <hr />
+    {% if employment %} {% for em in employment %}
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label for="employmenttype" class="form-label">Employment Type</label>
+
+        <input
+          type="text"
+          id="employmenttype"
+          name="employmenttype"
+          class="form-control"
+          disabled
+          value="{{ em['EmploymentType'] }}"
+        />
+      </div>
+      <div class="col-md-6">
+        <label for="supervisorname" class="form-label">Supervisor Name</label>
+
+        <input
+          type="text"
+          id="supervisorname"
+          name="supervisorname"
+          class="form-control"
+          disabled
+          value="{{ em['Name'] }}"
+        />
+      </div>
+
+      <div class="col-md-4">
+        <label for="weeklyhours" class="form-label">Weekly Hours</label>
+
+        <input
+          type="number"
+          id="weeklyhours"
+          name="weeklyhours"
+          class="form-control"
+          disabled
+          value="{{ em['WeeklyHours'] }}"
+        />
+      </div>
+      <div class="col-md-4">
+        <label for="em_start_date" class="form-label">Start Date</label>
+
+        <input
+          type="date"
+          id="em_start_date"
+          name="em_start_date"
+          class="form-control"
+          disabled
+          value="{{ em['StartDate'] }}"
+        />
+      </div>
+      <div class="col-md-4">
+        <label for="em_end_date" class="form-label">End Date</label>
+
+        <input
+          type="date"
+          id="em_start_date"
+          name="em_start_date"
+          class="form-control"
+          disabled
+          value="{{ em['EndDate'] }}"
+        />
+      </div>
+      <hr />
+    </div>
+    <br /><br /><br />
+    {% endfor %} {% endif %}
+  </div>
+  <br /><br /><br /><br /><br /><br />
+</div>
+{% endblock %}

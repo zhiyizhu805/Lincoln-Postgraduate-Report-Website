@@ -1,0 +1,430 @@
+<!--complete profile Modal -->
+<!--included by base.html -->
+
+<div
+  class="modal fade registerclass"
+  id="completeProfileModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="complete_profile_ModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="margin-top: 120px">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="completeProfileModalLabel">Complete Your Profile:</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <!-- flash message for complete profile modal-->
+      <div class="modal-body">
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %} {% for category, message in messages %} {% if category
+        =="error" %}
+        <div
+          class="alert alert-danger alert-dismissible fade show"
+          role="alert"
+        >
+          {{ message }}
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+          ></button>
+        </div>
+
+        {% elif category == "warning" %}
+        <div
+          class="alert alert-warning alert-dismissible fade show"
+          role="alert"
+        >
+          {{ message }}
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+          ></button>
+        </div>
+
+        {% endif %} {% endfor %} {% endif %} {% endwith %}
+        <!-- end flash message-->
+        <form
+          action="{{ url_for('account.complete_profile') }}"
+          method="POST"
+          class="needs-validation-register-form"
+          novalidate
+        >
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="enroldate" 
+              ><strong>Enrolment date:</strong></label
+            >
+              <input
+                type="date"
+                id="enroldate"
+                name="enroldate"
+                class="form-control"
+                value="{{enroldate}}"
+                required
+              />
+              <div class="invalid-feedback">Please select a date.</div>
+            </div>
+
+            <div class="form-group col-md-6">
+            <label for="mode_of_study" 
+              ><strong>Mode Of Study:</strong></label
+            >
+              <select
+                id="mode_of_study"
+                name="mode_of_study"
+                class="form-control"
+                value="{{mode_of_study}}"
+                required
+              >
+                <option value="">--   Please Select   -- </option>
+                <option value="Full-time"  {%if mode_of_study == "Full-time"%} selected {%endif%}>Full - Time</option>
+                <option value="Part-time"  {%if mode_of_study == "Part-time"%} selected {%endif%}>Part - Time</option>
+              </select>
+              <div class="invalid-feedback">Please select Mode of Study</div>
+            </div>
+          </div>
+
+            <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="thesis"
+                  ><strong>Thesis title:</strong></label
+                >
+                  <input
+                    type="text"
+                    id="thesis"
+                    name="thesis"
+                    class="form-control"
+                    value="{{thesis}}"
+                    required
+                  />
+                  <div class="invalid-feedback">Please enter your Thesis title.</div>
+                </div>
+
+                <div class="form-group col-md-6">
+                <label for="dept" 
+                  ><strong>Department:</strong></label
+                >
+                  <select
+                    id="dept"
+                    name="dept"
+                    class="form-control"
+                    required
+                    value="{{dept}}"
+                  > 
+                    <option value="">--   Please Select   -- </option>
+                    {%for department in departments_name%}
+                    <option value="{{department['DepartmentCode']}}" {%if dept == department['DepartmentCode']%} selected {%endif%}>
+                      {{department['DepartmentName']}}
+                    </option>
+                    {%endfor%}
+                  </select>
+                  <div class="invalid-feedback">Please select your department.</div>
+                </div>
+              </div>
+
+
+              <div class="form-group row">
+                    <div class="form-group col-md-4">
+                    <label for="principle_supervisor" 
+                      ><strong>Principle Supervisor:</strong></label
+                    >
+                      <select
+                        id='principle_supervisor'
+                        name="principle_supervisor"
+                        class="form-control"
+                        required
+                        value="{{dept}}"
+                      > 
+                        <option value="">--   Please Select   -- </option>
+                        {%for staff_name in all_staff_name%}
+                        <option value="{{staff_name['StaffID']}}">
+                          {{staff_name['FirstName']}} {{staff_name['LastName']}}
+                        </option>
+                        {%endfor%}
+                      </select>
+                      <div class="invalid-feedback">Please select your Principle Supervisor.</div>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                      <label for="associate_supervisor1" 
+                        ><strong>Associate Supervisor:</strong></label
+                      >
+                        <select
+                          name="associate_supervisor1"
+                          id="associate_supervisor1"
+                          class="form-control"
+                          required
+                          value="{{dept}}"
+                        > 
+                          <option value="">--   Please Select   -- </option>
+                          {%for staff_name in all_staff_name%}
+                          <option value="{{staff_name['StaffID']}}">
+                            {{staff_name['FirstName']}} {{staff_name['LastName']}}
+                          </option>
+                          {%endfor%}
+                        </select>
+                        <div class="invalid-feedback">Please select your 1st Associate Supervisor.</div>
+                      </div>
+
+                      <div class="form-group col-md-4">
+                        <label for="associate_supervisor2" 
+                          ><strong>Associate Supervisor:</strong></label
+                        >
+                          <select
+                            name="associate_supervisor2"
+                            id="associate_supervisor2"
+                            class="form-control"
+                            required
+                            value="{{dept}}"
+                          > 
+                            <option value="">--   Please Select   -- </option>
+                            {%for staff_name in all_staff_name%}
+                            <option value="{{staff_name['StaffID']}}">
+                              {{staff_name['FirstName']}} {{staff_name['LastName']}}
+                            </option>
+                            {%endfor%}
+                          </select>
+                          <div class="invalid-feedback">Please select your 2nd Associate Supervisor.</div>
+                        </div>
+                      </div>
+
+    
+              <div class="form-group row">
+                <div class="form-group col-sm-12">
+                <label for="add-scholarship" 
+                  ><strong>Do you have a Scholarship?</strong></label
+                >
+                  <button
+                    type="button"
+                    id="add-scholarship"
+                    class="btn btn-primary"
+                    style="border: none;background:none"
+                  >
+                  <span style="color:green"><i class="fas fa-plus-circle"></i></span>
+                  </button>
+                  <button
+                    type="button"
+                    id="remove-scholarship"
+                    class="btn btn-danger"
+                    style="border: none;background:none"
+                  >
+                  <span style="color:red"><i class="fas fa-minus-circle"></i></span>
+                  </button>
+              </div>
+
+              <!--scholarships form, only open when user click 'Add scholarship' button-->
+              <div class="form-row">
+              <div id="scholarships-container" class="form-group col-md-12"></div>
+            </div>
+              <!--end scholarships form-->
+
+              <div class="form-group row">
+                <div class="form-group col-md-12">
+                <label for="add-scholarship"
+                  ><strong>Do you have Employment?</strong></label
+                >
+                  <button
+                    type="button"
+                    id="add-employment"
+                    class="btn btn-primary"
+                    style="border: none;background:none"
+                  >
+                  <span style="color:green"><i class="fas fa-plus-circle"></i></span>
+                  </button>
+                  <button
+                    type="button"
+                    id="remove-employment"
+                    class="btn btn-danger"
+                    style="border: none;background:none"
+                  >
+                  <span style="color:red"><i class="fas fa-minus-circle"></i></span>
+                  </button>
+              </div>
+
+              <!--employment form, only open when user click 'Add employment' button-->
+              <div class="form-row">
+              <div id="employment-container" class="form-group col-md-12"></div>
+            </div>
+              <!--end employment form-->
+              <br />
+              <div class="row col-sm-8 offset-md-5">
+                <button
+                  type="submit"
+                  class="btn btn-primary mb-3"
+                  style="width: 30%"
+                  href="#"
+                >
+                  Register
+                </button>
+              </div>
+
+
+
+
+<!--
+
+          <div class="form-row">
+            <div class="form-group col-md-3">
+              <label for="firstname"><strong>First Name:</strong></label>
+              <input
+                type="text"
+                id="firstname"
+                name="firstname"
+                class="form-control"
+                value="{{firstname}}"
+                required
+                pattern="[a-zA-Z ]+"
+              />
+              <div class="invalid-feedback">
+                Please provide a valid first name(Only English letters, spaces
+                allowed).
+              </div>
+            </div>
+            <div class="form-group col-md-3">
+              <label for="lastname"><strong>Last Name:</strong></label>
+              <input
+                type="text"
+                id="lastname"
+                name="lastname"
+                class="form-control"
+                value="{{lastname}}"
+                required
+                pattern="[a-zA-Z ]+"
+              />
+              <div class="invalid-feedback">
+                Please provide a valid last name(Only English letters, spaces
+                are allowed).
+              </div>
+            </div>
+
+            <div class="form-group col-md-3">
+              <label for="studentid"><strong>Student ID:</strong></label>
+              <input
+                type="number"
+                id="studentid"
+                name="studentid"
+                class="form-control"
+                value="{{studentid}}"
+                pattern="[0-9]*"
+                required
+              />
+              <div class="invalid-feedback">
+                Please provide a valid student ID.(Only numbers allowed).
+              </div>
+            </div>
+            <div class="form-group col-md-3">
+              <label for="phone"><strong>Phone:</strong></label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                class="form-control"
+                value="{{phone}}"
+                required
+                pattern="[0-9\-]*"
+              />
+              <div class="invalid-feedback">
+                Please provide a valid phone number(Only numbers and hyphens (-)
+                are allowed).
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="email"><strong>Email:</strong></label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-control"
+                value="{{email}}"
+                required
+              />
+              <div class="invalid-feedback">
+                Please provide a valid email address.
+              </div>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="address"><strong>Physical Address: </strong></label>
+              <input
+                type="text"
+                id="address"
+                name="address"
+                class="form-control"
+                value="{{address}}"
+                pattern="^[A-Za-z0-9\s,./-]*$"
+                required
+              />
+              <div class="invalid-feedback">
+                Please provide a valid address(Only letters, numbers, spaces,
+                commas, periods, slashes and dashes are allowed).
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="password"><strong>Password:</strong></label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="form-control"
+                value="{{password}}"
+                pattern="^\d{8,}$"
+                required
+              />
+              <div class="invalid-feedback">
+                The password must be at least eight characters long.
+              </div>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="confirm_password"
+                ><strong>Confirm Password:</strong></label
+              >
+              <input
+                type="password"
+                id="confirm_password"
+                name="confirm_password"
+                class="form-control"
+                value="{{confirm_password}}"
+                pattern="^.{8,}$"
+                required
+              />
+              <div class="invalid-feedback">
+                The password must be at least eight characters long.
+              </div>
+            </div>
+          </div>
+
+          <div class="row col-sm-8 offset-md-5">
+            <button
+              type="submit"
+              class="btn btn-primary mb-3"
+              style="width: 30%"
+              href="#"
+            >
+              Register
+            </button>
+          </div>
+          -->
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- login modal -->

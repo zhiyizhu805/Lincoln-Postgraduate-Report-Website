@@ -1,0 +1,30 @@
+{% extends 'user_base.html' %} {% block title %}Student List{% endblock %} {%
+block content %}
+<div>
+  <div>
+    <h1>Student List</h1>
+    <hr />
+  </div>
+  <div>
+    <table class="table">
+      <thead class="table table-secondary table-hover table-striped">
+        <tr>
+          <th scope="col">Student Name</th>
+          <th scope="col">Report ID</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in student_list%}
+        <tr>
+
+          <td><a href="/student/report_edit/{{student['StudentID']}}/{{student['ReportID']}}">{{student['FullName']}}</a></td>
+          <td>{{student['ReportID']}}</td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

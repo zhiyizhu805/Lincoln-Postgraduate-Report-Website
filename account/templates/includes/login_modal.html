@@ -1,0 +1,102 @@
+<!--Login Modal -->
+<!--included by base.html -->
+<div
+  class="modal fade"
+  id="loginModal"
+  tabindex="-1"
+  aria-labelledby="loginModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="loginModalLabel">Login</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <!-- flash message for log in-->
+      <div class="modal-body">
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %} {% for category, message in messages %} {% if category
+        =="error" %}
+        <div
+          class="alert alert-danger alert-dismissible fade show"
+          role="alert"
+        >
+          {{ message }}
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+          ></button>
+        </div>
+
+        {% elif category == "success" %}
+        <div
+          class="alert alert-success alert-dismissible fade show"
+          role="alert"
+        >
+          {{ message }}
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+          ></button>
+        </div>
+        {% endif %} {% endfor %} {% endif %} {% endwith %}
+        <!-- end flash message-->
+        <form
+          action="{{ url_for('account.login') }}"
+          method="POST"
+          class="needs-validation"
+          novalidate
+        >
+          <div class="mb-3">
+            <label for="email_login" class="col-form-label"
+              ><strong>Email:</strong></label
+            >
+            <input
+              type="email"
+              class="form-control"
+              name="email_login"
+              required
+            />
+            <div class="invalid-feedback">
+              please input a valid email address with "@"
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="password_login" class="col-form-label"
+              ><strong>Password:</strong></label
+            >
+
+            <input
+              type="password"
+              class="form-control"
+              name="password_login"
+              minlength="8"
+              required
+            />
+            <div class="msg">{{ msg }}</div>
+          </div>
+          <div class="mb-3">
+            <button
+              type="submit"
+              class="btn btn-primary mb-3"
+              style="margin-left: 40%"
+            >
+              Login
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- login modal -->

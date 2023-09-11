@@ -1,0 +1,165 @@
+{% extends 'dashboard.html' %} {% block title %}Profile{% endblock %} {% block
+  content %}
+  <div class="container">
+    <br />
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <ul class="flashes">
+      {% for message in messages %}
+      <div
+        class="alert alert-success alert-dismissible fade show"
+        role="alert"
+      >
+      {{ message }}
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+    <div class="row">
+      <div class="col-8"><h1 style="color: #fff">Supervisors List</h1></div>
+  
+      <div class="col-4" style="text-align: right">
+        <a
+          class="btn btn-primary"
+          href="{{ url_for('admin.convenors') }}"
+          role="button"
+        >
+          Manage Convenors
+        </a>
+      </div>
+    </div>
+    <br />
+    <div style="background-color: #fff; color: rgb(41, 40, 40)">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Department Code</th>
+            <th scope="col">Edit</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for supervisor in supervisorList%}
+          <tr>
+            <th scope="row">{{supervisor['StaffID']}}</th>
+            <td>{{supervisor['Staff Name']}}</td>
+            <td>{{supervisor['Email']}}</td>
+            <td>{{supervisor['Phone']}}</td>
+            <td>{{supervisor['DepartmentCode']}}</td>
+            <td>
+              <div class="row">
+                <div class="col-auto">
+                  <a
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editSupervisor{{supervisor['StaffID']}}"
+                    title="edit"
+                  >
+                    <span style="color: #2196f3"><i class="fas fa-pen"></i></span>
+                  </a>
+                </div>
+                
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+          {%endfor%}
+  
+          {% for supervisor in supervisorList%}
+          <div class="modal fade" 
+            id="editSupervisor{{supervisor['StaffID']}}" 
+            tabindex="-1" 
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5">Edit Supervisor Details - ID {{supervisor['StaffID']}}</h1>
+                  <button type="button" 
+                    class="btn-close" 
+                    data-bs-dismiss="modal" 
+                    aria-label="Close">
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <!-- Edit student form -->
+                <form method="post" action="/admin/supervisors/update">
+                    <div class="mb-3">
+                      <label for="editStaffID{{supervisor['StaffID']}}" class="form-label" hidden>
+                        <b>Staff ID:</b>
+                      </label>
+                      <input type="text" 
+                        class="form-control" 
+                        id="editStaffID{{supervisor['StaffID']}}" 
+                        name="staffid" 
+                        value="{{supervisor['StaffID']}}" 
+                        hidden>
+                    </div>
+                    <div class="mb-3">
+                      <label for="editName{{supervisor['StaffID']}}" class="form-label">
+                        <b>Name:</b>
+                      </label>
+                      <input type="text" 
+                        class="form-control" 
+                        id="editName{{supervisor['StaffID']}}" 
+                        name="name" 
+                        value="{{supervisor['Staff Name']}}" 
+                        readonly>
+                    </div>
+                    <div class="mb-3">
+                      <label for="editEmail{{supervisor['StaffID']}}" class="form-label">
+                        <b>Email:</b>
+                      </label>
+                      <input type="email" 
+                        class="form-control" 
+                        id="editEmail{{supervisor['StaffIDD']}}" 
+                        name="email" 
+                        value="{{supervisor['Email']}}" 
+                        readonly>
+                    </div>
+                    <div class="mb-3">
+                      <label for="editPhone{{supervisor['StaffID']}}" class="form-label">
+                        <b>Phone:</b>
+                      </label>
+                      <input type="text" 
+                        class="form-control" 
+                        id="editPhone{{supervisor['StaffID']}}" 
+                        name="phone" 
+                        minlength="7"
+                        maxlength="14"
+                        pattern="[0-9]+"
+                        value="{{supervisor['Phone']}}" 
+                        title="invalid phone number"
+                        required>
+                      <div class="invalid-feedback">invalid phone number</div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="editDepartmentCode{{supervisor['StaffID']}}" class="form-label">
+                        <b>Department Code:</b>
+                      </label>
+                      <select name="departmentcode" id="editDepartmentCode{{supervisor['StaffID']}}" class="form-select" aria-label="Default select example">
+                        {% for department in depList %}
+                        <option value="{{ department['DepartmentCode'] }}" {% if department['DepartmentCode'] == supervisor['DepartmentCode'] %} selected {% endif %}>
+                            {{ department['DepartmentCode'] }} - {{ department['DepartmentName']}}
+                        </option>
+                        {% endfor %}
+                      </select>
+                    </div>
+  
+                    
+                    
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a type="button" class="btn btn-secondary" href="/admin/supervisors">Cancel</a>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          {%endfor%}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {%endblock%}
+  

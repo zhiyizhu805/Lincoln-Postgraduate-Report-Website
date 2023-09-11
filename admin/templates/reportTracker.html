@@ -1,0 +1,309 @@
+{% extends 'dashboard.html' %} {% block title %}Profile{% endblock %} {% block
+content %}
+<div class="container">
+  <br />
+  <div class="row"><h1 style="color: #fff">Track a report</h1></div>
+  <br />
+  <div style="background-color: #fff; color: rgb(41, 40, 40)">
+    {% if reportIsExsited %}
+    <div style="padding-left: 30%; padding-top: 10%">
+      <form class="row g-3">
+        <div class="col-6">
+          <input
+            name="reportId"
+            class="form-control"
+            type="number"
+            placeholder="type report ID"
+          />
+        </div>
+        <div class="col-4">
+          <button type="submit" class="btn btn-primary mb-3">
+            <b>Track</b>
+          </button>
+        </div>
+      </form>
+    </div>
+    <br />
+    <div style="padding-left: 10%; padding-bottom: 20%; padding-top: 10%">
+      <div class="row">
+        <div class="col-auto" {% if statusPoint>
+          0 %} style="border-bottom: 6px solid #0a9396; width: 30%" {%else%}
+          style="border-bottom: 6px solid #bc4749; width: 30%" {%endif%} >
+        </div>
+        <div class="col-auto" {% if statusPoint>
+          1 %} style="border-bottom: 6px solid #0a9396; width: 30%" {%else%}
+          style="border-bottom: 6px solid #bc4749; width: 30%" {%endif%} >
+        </div>
+        <div class="col-auto" {% if statusPoint>
+          2 %} style="border-bottom: 6px solid #0a9396; width: 30%" {%else%}
+          style="border-bottom: 6px solid #bc4749; width: 30%" {%endif%} >
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-auto" style="width: 30%; text-align: right">
+          student {% if statusPoint>0 %}
+          <a
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#studentStatus"
+            ><span style="color: #0a9396" title="view"
+              ><i class="fas fa-check-circle"></i></span></a
+          >{%else%}<span style="color: #bc4749" title="no record"
+            ><i class="fas fa-exclamation-circle"></i
+          ></span>
+          {%endif%}
+        </div>
+        <!-- modal section -->
+        <div
+          class="modal fade"
+          id="studentStatus"
+          tabindex="-1"
+          aria-labelledby="studentModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="studentModalLabel">
+                  Report Status
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Submitted by student at</b>:
+                      {{stuSubmittedTime['Time']}} {{stuSubmittedTime['Date']}}
+                    </div>
+                  </div>
+                  <br />
+                  {% if statusPoint==1 %}
+                  <hr />
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Supervisors:</b>
+                    </div>
+                  </div>
+                  {% for supervisor in supervisors%}
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>{{supervisor['SupervisorType']}}</b>:
+                      {{supervisor['supervisorName']}}
+                    </div>
+                  </div>
+                  {%endfor%} {%endif%}
+                  <br />
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                {% if statusPoint==1 %}
+                <form method="post" action="admin/remindSupervisor">
+                  <input
+                    type="hidden"
+                    name="studentId"
+                    value="{{studentId['StudentID']}}"
+                  />
+                  <button type="submit" class="btn btn-primary">
+                    Send Reminder
+                  </button>
+                </form>
+                {%endif%}
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end -->
+        <div class="col-auto" style="width: 30%; text-align: right">
+          supervisor {% if statusPoint>1 %}
+          <a
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#supervisorStatus"
+          >
+            <span style="color: #0a9396" title="view"
+              ><i class="fas fa-check-circle"></i></span></a
+          >{%else%}<span style="color: #bc4749" title="no record"
+            ><i class="fas fa-exclamation-circle"></i
+          ></span>
+          {%endif%}
+        </div>
+        <!-- modal section -->
+        <div
+          class="modal fade"
+          id="supervisorStatus"
+          tabindex="-1"
+          aria-labelledby="supervisorModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="supervisorModalLabel">
+                  Report Status
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Submitted by supervisor at</b>:
+                      {{supSubmittedTime['Time']}} {{supSubmittedTime['Date']}}
+                    </div>
+                  </div>
+                  <br />
+                  {% if statusPoint==2 %}
+                  <hr />
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Convenor</b>:{{conDetail['convenorName']}}
+                    </div>
+                  </div>
+
+                  {%endif%}
+                  <br />
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                {% if statusPoint==2 %}
+                <form method="post" action="admin/remindConvenor">
+                  <input
+                    type="hidden"
+                    name="email"
+                    value="{{conDetail['Email']}}"
+                  />
+                  <button type="submit" class="btn btn-primary">
+                    Send Reminder
+                  </button>
+                </form>
+                {%endif%}
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end -->
+        <div class="col-auto" style="width: 30%; text-align: right">
+          convenor {% if statusPoint>2 %}
+          <a
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#convenorStatus"
+            ><span style="color: #0a9396" title="view"
+              ><i class="fas fa-check-circle"></i></span></a
+          >{%else%}<span style="color: #bc4749" title="no record"
+            ><i class="fas fa-exclamation-circle"></i
+          ></span>
+          {%endif%}
+        </div>
+        <!-- modal section -->
+        <div
+          class="modal fade"
+          id="convenorStatus"
+          tabindex="-1"
+          aria-labelledby="convenorModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="studentModalLabel">
+                  Report Status
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-auto">
+                      <b>Final report submitted at</b>:
+                      {{conSubmittedTime['Time']}} {{conSubmittedTime['Date']}}
+                    </div>
+                  </div>
+                  <br />
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end -->
+      </div>
+      <br /><br /><br />
+      <div class="row">
+        <div class="col-auto" style="padding-left: 30%">
+          <b>Report ID</b>: {{reportId}} ---<b>Status</b>: {%if statusPoint==0
+          %} Student Started {%elif statusPoint==1 %} Student Submitted {%elif
+          statusPoint==2 %} Supervisor Submitted {%elif statusPoint==3 %}
+          Completed {%endif%}
+        </div>
+      </div>
+    </div>
+    {%else%}
+    <div style="padding-left: 30%; padding-top: 20%; padding-bottom: 20%">
+      <form class="row g-3">
+        <div class="col-6">
+          <input
+            name="reportId"
+            class="form-control"
+            type="number"
+            placeholder="type report ID"
+          />
+        </div>
+        <div class="col-4">
+          <button type="submit" class="btn btn-primary mb-3">
+            <b>Track</b>
+          </button>
+        </div>
+      </form>
+      <div class="row">
+        <div class="col-auto" style="padding-left: 15%; color: #bc4749">
+          {{errorMsg}}
+        </div>
+      </div>
+    </div>
+    {%endif%}
+  </div>
+</div>
+
+{% endblock %}
