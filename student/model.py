@@ -3,24 +3,45 @@ from contextlib import contextmanager
 import mysql.connector
 import connect
 import datetime
+from mysql.connector.errors import DatabaseError
 
 today = datetime.date.today()
 current_time = datetime.datetime.now().time()
 
+
 @contextmanager
 def get_cursor():
-    connection = mysql.connector.connect(user=connect.dbuser,
-                                         password=connect.dbpass, 
-                                         host=connect.dbhost,
-                                         database=connect.dbname, 
-                                         autocommit=True)
-    cur = connection.cursor(dictionary=True)
+    connection = None
+    cur = None
+    
+    def connect_to_db():
+        nonlocal connection, cur
+        connection = mysql.connector.connect(user=connect.dbuser,
+                                             password=connect.dbpass, 
+                                             host=connect.dbhost,
+                                             database=connect.dbname, 
+                                             autocommit=True)
+        cur = connection.cursor(dictionary=True)
+
+    connect_to_db()
+
     try:
         yield cur
+    except DatabaseError as e:
+        if "client was disconnected by the server because of inactivity" in str(e):
+            print("Error:", e)
+            print("Reconnecting to the database...")
+            # Close the old connection and cursor
+            if cur: cur.close()
+            if connection: connection.close()
+            # Reconnect
+            connect_to_db()
+            yield cur
+        else:
+            raise
     finally:
-        cur.close()
-        connection.close()
-
+        if cur: cur.close()
+        if connection: connection.close()
 
 class User:
     def __init__(self, email=None, password=None, student_id=None, period_ending=None, report_id=None,
