@@ -2020,7 +2020,7 @@ html {
   background-size: cover; /* sets the background image size to cover the entire element */
 }
 .footer {
-  position: fixed;
+  position: relative;
   left: 0;
   bottom: 0;
   width: 100%;
